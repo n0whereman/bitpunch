@@ -29,6 +29,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 	#ifndef BPU_CONF_MECS_CCA2_POINTCHEVAL_QCMDPC
         #define BPU_CONF_MECS_CCA2_POINTCHEVAL_QCMDPC
     #endif
+    //Include Kobara-Imai
+    #ifndef BPU_CONF_MECS_CCA2_KOBARA_IMAI_QCMDPC
+        #define BPU_CONF_MECS_CCA2_KOBARA_IMAI_QCMDPC
+    #endif
+    #ifndef BPU_CONF_MECS_CCA2_KOBARA_IMAI_GOPPA
+      #define BPU_CONF_MECS_CCA2_KOBARA_IMAI_GOPPA
+    #endif
     #ifndef BPU_CONF_SHA_512
         #define BPU_CONF_SHA_512
     #endif
@@ -52,7 +59,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 	#endif
 #endif
 
-#if defined(BPU_CONF_MECS_CCA2_POINTCHEVAL_GOPPA) || defined(BPU_CONF_MECS_CCA2_POINTCHEVAL_QCMDPC)
+#if defined(BPU_CONF_MECS_CCA2_POINTCHEVAL_GOPPA) || defined(BPU_CONF_MECS_CCA2_POINTCHEVAL_QCMDPC) || defined(BPU_CONF_MECS_CCA2_KOBARA_IMAI_GOPPA) || defined(BPU_CONF_MECS_CCA2_KOBARA_IMAI_QCMDPC)
     #ifndef BPU_CONF_SHA_512
         #define BPU_CONF_SHA_512
     #endif

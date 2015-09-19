@@ -53,7 +53,8 @@ SOURCES += \
     lib/src/bitpunch/crypto/cca2/mecspointcheval.c \
     lib/src/bitpunch/asn1/asn1.c \
     lib/src/bitpunch/code/qcmdpc/qcmdpc.c \
-    lib/src/bitpunch/code/qcmdpc/qcmdpctypes.c
+    lib/src/bitpunch/code/qcmdpc/qcmdpctypes.c \
+    lib/src/bitpunch/crypto/cca2/mecskobaraimai.c
 
 #include(deployment.pri)
 #qtcAddDeployment()

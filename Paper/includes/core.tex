@@ -1,9 +1,32 @@
-\section{Monosti anonymizácie}
-\noindent Anonymizácia znamená zmena alebo úprava údajov tak, aby sa pod¾a nich nedala jednoznaène urèi osoba, ktorej tieto údaje patria \cite{anonlib}. Existuje nieko¾ko spôsobov, ktorımi môeme dosiahnu rôznu úroveò anonymizácie na internete: od mazania cookies súborov po ukonèení prehliadania webovıch stránok a po pouívanie operaènıch systémov, ktoré sú na anonymite zaloené; od bezplatnıch moností a po komerèné verzie.  
-\newline Nasleduje priblíenie niektorıch monosti anonymizácie.
+\section{Preliminaries}
+\noindent The security of many cryptosystems relies on three hard problems: the integer factorization problem, the discrete logarithm problem or the elliptic curve discrete logarithm problem. However, these problems can be efficiently solved by a quantum computer using Shor's algorithm. [Postquantum crypto, D.J. Bernstein] Post-quantum cryptography refers to cryptographic algorithms that are meant to be secure against an attack by the quantum computer. Nowadays many cryptographers are designing and reviewing algorithms, striving for the best candidate for post-quantum world. One of the most reviewed candidate is McElice cryprosystem, which is described more in detail in the following section. 
 
-\subsection{Súkromné prehliadanie}
-\noindent Najpouívanejšie internetové prehliadaèe súèasnosti majú v sebe zabudovanú funkcionalitu, ktorá dokáe èiastoène anonymizova prístup na internet. Táto funkcionalita blokuje ukladanie navštívenıch stránok do histórie a nezaznamenáva súbory, ktoré sa stiahnu z~internetu. Súbory...
+\subsection{McElice cryptosystem}
+\noindent McElice cryptosystem was proposed by R. J.McEliece in 1978.~\cite{mceliece1978public} The cryptosystem belongs to a public key cryptography family of protocols, it basically means that two different keys are used for encryption and decryption. The most common public-key scheme used today is RSA. Security of RSA has been reviewed more in detail than any other public-key scheme, so that's why may be considered to be more secure. Due to fact that RSA uses shorter keys, we can find just rare implementations of McElice PKC in practice. However, McElice PKC provides much more faster encryption and decryption process of messages. [referencia]
+The original construction of McElice cryptosystem is based on Goppa codes, which seems to be resistant against cryptoanalysis with the right choice of parameters. Goppa codes are well suited for cryptographic application due to its generator matrix, which is hardly to be distinguished from a random binary matrix and also for their high error-correcting capabilities. Many other variants of the cryptosystem using various linear codes have been proposed over the years, but the most of them were subsequently proven to be insecure by researchers. [referencia] McElice cryptosystem is considered to be one of the best candidate for post-quantum cryptography, which causes a growing interest in implementation and cryptoanalysis. Security of McElice cryptosystem relies on a decoding problem, which is known to be NP-hard. [referencia]
+The most important part of secret key is without any doubts the description of the structured linear code, created by an irreducible polynom in key generation process. An efficient decoding algorithm for the chosen linear-code is required for successful decryption of messages. It is clear that the knowing the structure of the underlying linear code provides a
+way for fast decryption. McElice cryptosystem also takes an advantage from randomness. A public key is !"permuted" and "varied" form of chosen-linear code (secret key), which should be hardly distinguished from a completely random linear code. Now we can formally define McElice cryptosystem.
+
+\subsubsection{Key generation}
+\paragraph{Generovanie k¾úèového páru} % (fold)
+\label{par:generovanie_k_ov_ho_p_ru}
+Alg.~\ref{mecs_keygen} shows a process of generation of key pair. In order to generate key pair, we have to define Goppa code, which is created over irreducible polynom. Pre nájdenie daného polynómu môeme poui algoritmus z~\cite{bitpunch2014}. Algoritmus testuje ireducibilnos náhodne zvoleného polynómu daného stupòa. Pre zostrojenie kontrolnej matice kódu je pouitı algoritmus uvádzanı v~\cite{shoufan2009novel}. Pomocou Gaussovej eliminaènej metódy~\cite{bitpunch2014} upravíme kontrolnú maticu na~systematickı tvar a následne je moné vytvori generujúcu maticu. Vıstupom algoritmu je dvojica: privátny a verejnı k¾úè. Private key - $S,G,P$ (random singular matrix, generation matrix, permutation matrix). Public key - $\widehat{G},t$ (masked generation matrix and number of error, which is capable to correct). 
+
+\begin{algorithm}[H]
+	\caption{Key generation}
+	\label{mecs_keygen}
+	\begin{enumerate}
+		\item Pick a random irreducible polynom $g$ over $GF(2^m)$ of degree $t$,
+		\item Compute a $k \times n$ generation matrix $G$, of goppa code $\Gamma=(\alpha_1,...,\alpha_n,g)$, with dimension $k=n-td$,
+		\item Generate a random $k \times k$ singular matrix $S$,
+		\item Generate a random $n \times n$ permutation matrix $P$,
+		\item Compute a $k \times n$ matrix $\widehat{G}=SGP$,
+		\item Public key is pair of $(\widehat{G},t)$, where $t$ is maximum of corrected errors, private key is consisted of $S,G,P$.
+	\end{enumerate}
+\end{algorithm}
+% paragraph generovanie_k_ov_ho_p_ru (end)
+
+
 
 \begin{table}[!htbp]
 \begin{center}

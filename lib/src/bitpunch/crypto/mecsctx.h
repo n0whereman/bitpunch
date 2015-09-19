@@ -33,6 +33,13 @@ typedef enum _BPU_T_EN_Mecs_Types {
 #ifdef BPU_CONF_MECS_CCA2_POINTCHEVAL_QCMDPC
 	BPU_EN_MECS_CCA2_POINTCHEVAL_QCMDPC, ///< adapted Pointcheval's cca2 conversion for qcmdpc
 #endif
+//include Kobara-Imai
+#ifdef BPU_CONF_MECS_CCA2_KOBARA_IMAI_GOPPA
+    BPU_EN_MECS_CCA2_KOBARA_IMAI_GOPPA, ///< adapted Kobara-Imai's cca2 conversion
+#endif
+#ifdef BPU_CONF_MECS_CCA2_KOBARA_IMAI_QCMDPC
+    BPU_EN_MECS_CCA2_KOBARA_IMAI_QCMDPC, ///< adapted Pointcheval's cca2 conversion for qcmdpc
+#endif
 }BPU_T_EN_Mecs_Types;
 
 typedef struct _BPU_T_Mecs_Ctx {
