@@ -1,0 +1,91 @@
+\section{Monosti anonymizácie}
+\noindent Anonymizácia znamená zmena alebo úprava údajov tak, aby sa pod¾a nich nedala jednoznaène urèi osoba, ktorej tieto údaje patria \cite{anonlib}. Existuje nieko¾ko spôsobov, ktorımi môeme dosiahnu rôznu úroveò anonymizácie na internete: od mazania cookies súborov po ukonèení prehliadania webovıch stránok a po pouívanie operaènıch systémov, ktoré sú na anonymite zaloené; od bezplatnıch moností a po komerèné verzie.  
+\newline Nasleduje priblíenie niektorıch monosti anonymizácie.
+
+\subsection{Súkromné prehliadanie}
+\noindent Najpouívanejšie internetové prehliadaèe súèasnosti majú v sebe zabudovanú funkcionalitu, ktorá dokáe èiastoène anonymizova prístup na internet. Táto funkcionalita blokuje ukladanie navštívenıch stránok do histórie a nezaznamenáva súbory, ktoré sa stiahnu z~internetu. Súbory...
+
+\begin{table}[!htbp]
+\begin{center}
+\begin{tabular}{p{4cm}|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c}
+& \multicolumn{14}{c}%
+	 {\textbf{Funkcia}}\\ \hline
+&&&& & &\multicolumn{8}{c}%
+	 {Modifikácia}\\ 
+\textbf{Modul} &\begin{sideways} zobrazenie hlavièky \end{sideways} &\begin{sideways} blokovanie skriptov \end{sideways} &\begin{sideways} zmena IP \end{sideways} & \begin{sideways} zmena lokalizácie \end{sideways} & \begin{sideways} zmazanie/blokovanie cookies \end{sideways} & \begin{sideways} blokovanie trackerov \end{sideways}  & \begin{sideways} popis \end{sideways} & \begin{sideways}pouívate¾skı agent\end{sideways} & \begin{sideways} kódové oznaèenie prehliadaèa \end{sideways} & \begin{sideways} názov prehliadaèa \end{sideways} & \begin{sideways} verzia prehliadaèa \end{sideways} & \begin{sideways} platforma \end{sideways} & \begin{sideways} vırobca prehliadaèa \end{sideways} & \begin{sideways} oznaèenie vırobcu prehliadaèa \end{sideways} \\ \hline
+User agent switcher & & & & & &  & X & X & X & X & X & X & X & X  \\ \hline
+Ghostery &  && & & X & X &  &  & & & & & & \\  \hline
+Better privacy && &  & & X &  &  &  & & & & & & \\  \hline
+Anonymox &  && X & X & X &  & X & X & & & & & & \\  \hline
+Modify headers & & &  &  & X &  &  & X &  &  &  & & &  \\  \hline
+Request policy & & &  &  & & X  &  &  &  &  &  & & &   \\  \hline
+Live HTTP headers & X& &  &  & &  &  &  &  &  &  & & &   \\  \hline
+User agent awitcher for chrome & & &  &  & &  & X & X &  &  &  & & &   \\  \hline
+Header hacker & & &  &  & &  & X & X & X & X & X & X & X & X    \\  \hline
+Mod header & & &  &  & &  & X & X & X & X & X & X & X & X    \\  \hline
+Script no & &X &  &  & &  &  &  &  &  &  &  &  &     \\  \hline
+No script & &X &  &  & &  &  &  &  &  &  &  &  &     \\  \hline
+Proxify it & & &X  & X & &  &  &  &  &  &  &  &  &     \\  \hline
+I'm not here & & &  & X & &  &  &  &  &  &  &  &  &     \\  \hline
+Get anonymous personal edition & &X &X &X &X&X &  &  &  &  &  &  &  &     \\  \hline
+Anonymous browsing toolbar & & & X & X & &  &  &  &  &  &  &  &  &     \\  \hline
+Easy hide your IP and surf anonymously & & & X & X& &  &  & X & X & X & X &  &  &     \\  \hline
+\end{tabular}
+\caption{Moduly a ich funkcie pri anonymizácii}
+\label{modulyVlastnosti}
+\end{center}
+\end{table}
+
+\subsection{Anonymná sie}
+\noindent Anonymná sie je sie serverov, medzi ktorımi dáta prechádzajú šifrované. V anonymnıch sieach dáta prechádzajú z poèítaèa pouívate¾a, odkia¾ bola poiadavka poslaná, cez viaceré proxy smerovaèe, z ktorıch kadı správu doplní o smerovanie a zašifruje vlastnım k¾úèom. Cesta od ...
+
+
+\subsection{Funkcionalita}
+\noindent  Rozšírenie tie okrem splnenia špecifikácie malo pre preh¾adnos a overenie funkènosti zobrazova údaje, ktoré boli na server odoslané. Zoznam údajov odoslanıch na server, sa mal uklada do krátkodobej histórie, aby nemal pouívate¾ k dispozícií len najnovšie údaje, ale aj údaje odoslané v nejakom èasovom období. 
+
+\subsubsection{Funkcionalita2}
+\noindent Samozrejmosou bolo nastavenie zapnutia rozšírenia pri štarte, prípadne interval zmeny odosielanıch údajov.
+
+\subsection{Vzh¾ad}
+\noindent Dôleitou poiadavkou kladenou na rozšírenie bolo príjemné pouívate¾ské rozhranie. Z~tohto dôvodu malo rozšírenie obsahova zoznam modifikovanıch vlastností a tlaèidlo pre prístup k nastaveniam rozšírenia v jednoduchej a praktickej forme. Predpokladanı vzh¾ad je zobrazenı na obrázku è. \ref{vzhladobr}.
+\begin{figure}[!htbp]
+  \centering
+  \includegraphics[width=8cm]{img/vzhlad.png}
+  \caption{Predpokladanı vzh¾ad rozšírenia.}
+  \label{vzhladobr}
+\end{figure}	 
+\noindent Dôleitou poiadavkou kladenou na rozšírenie bolo príjemné pouívate¾ské rozhranie.\cite{anonlib} Z~tohto dôvodu malo rozšírenie obsahova zoznam modifikovanıch vlastností a tlaèidlo pre prístup k nastaveniam rozšírenia v jednoduchej a praktickej forme. Predpokladanı vzh¾ad je zobrazenı na obrázku è. \ref{vzhladobr}.
+
+\begin{algorithm}
+\lstset{
+    language=C,
+    basicstyle=\small\sffamily,
+    frame=none,
+    numbers=left,
+    xleftmargin=5.0ex,
+    numberstyle=\tiny,
+    stepnumber=1,
+    showstringspaces=false,
+    keywordstyle=\color{blue}\bfseries
+    }
+\lstset{emph={%  Adjust any special keywords
+    printf%
+    },emphstyle={\color[rgb]{1,0,0}\bfseries}%
+}%
+\begin{lstlisting}
+/* Hello World program */
+
+#include<stdio.h>
+
+struct cpu_info {
+    long unsigned utime, ntime, stime, itime;
+    long unsigned iowtime, irqtime, sirqtime;
+};
+
+main()
+{
+    printf("Hello World");
+}\end{lstlisting}
+ \caption{Ukáka algoritmu}
+ \label{euclid}
+\end{algorithm}
