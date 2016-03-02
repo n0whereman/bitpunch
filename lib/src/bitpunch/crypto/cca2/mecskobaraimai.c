@@ -25,7 +25,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #ifdef BPU_CONF_ENCRYPTION
 int BPU_mecsKobaraImaiCCA2Encrypt(BPU_T_GF2_Vector *out, const BPU_T_GF2_Vector *in, const BPU_T_Mecs_Ctx *ctx) {
     int rc = 0;
-   /* BPU_T_GF2_Vector *r1, *r2, *cca2_pt, *hash, *hash_in, *enc_pt, *tmp;
+    fprintf(stderr, "\nSOMN KOBARAIMAIIIIIII_ENC\n");
+    //compute (m||const)
+    //BPU_gf2VecMalloc(&pub_const, ctx->pt_len);
+    //BPU_gf2VecRand(r1, 0);
+   // BPU_gf2VecConcat(mconst, in, pub_constant);
+
+
+    /* BPU_T_GF2_Vector *r1, *r2, *cca2_pt, *hash, *hash_in, *enc_pt, *tmp;
 	int rc = 0;
 
 	// Generate a random (k − l)-bit vector r1 and a random l-bit vector r2
@@ -76,6 +83,7 @@ int BPU_mecsKobaraImaiCCA2Encrypt(BPU_T_GF2_Vector *out, const BPU_T_GF2_Vector 
 #ifdef BPU_CONF_DECRYPTION
 int BPU_mecsKobaraImaiCCA2Decrypt(BPU_T_GF2_Vector *out, const BPU_T_GF2_Vector *in, const BPU_T_Mecs_Ctx *ctx) {
     int rc = 0;
+    fprintf(stderr, "\nSOMN KOBARAIMAIIIIIII_DEC\n");
    /* BPU_T_GF2_Vector *z1, *z3; // n, l, l-bit
     BPU_T_GF2_Vector *tmp_2, *pt_cca2;
     BPU_T_GF2_Vector *r; // k - l

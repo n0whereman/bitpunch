@@ -51,6 +51,7 @@ typedef struct _BPU_T_Mecs_Ctx {
 	BPU_T_Code_Ctx *code_ctx;
 	uint16_t pt_len; ///< PT len in bits
 	uint16_t ct_len; ///< CT len in bits
+    BPU_T_GF2_Vector *pub_constant;
 }BPU_T_Mecs_Ctx;
 
 typedef union _BPU_T_UN_Code_Params BPU_T_UN_Mecs_Params;

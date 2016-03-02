@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.16 (TeX Live 2015) (preloaded format=pdflatex 2015.9.19)  19 SEP 2015 17:02
+This is pdfTeX, Version 3.14159265-2.6-1.40.16 (TeX Live 2015) (preloaded format=pdflatex 2015.10.13)  13 OCT 2015 23:50
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -514,6 +514,12 @@ Package hyperref Info: Option `colorlinks' set `true' on input line 217.
 )
 (./ukazka_prace2.aux
 
+LaTeX Warning: Label `mecs_keygen' multiply defined.
+
+
+LaTeX Warning: Label `mecs_keygen' multiply defined.
+
+
 LaTeX Warning: Label `euclid' multiply defined.
 
 )
@@ -590,7 +596,7 @@ e
 [1
 
 {/usr/local/texlive/2015/texmf-var/fonts/map/pdftex/updmap/pdftex.map}]
-[1] <includes/assignment.jpeg, id=71, 596.4684pt x 843.99315pt>
+[1] <includes/assignment.jpeg, id=83, 596.4684pt x 843.99315pt>
 File: includes/assignment.jpeg Graphic file (type jpg)
 
 <use includes/assignment.jpeg>
@@ -606,6 +612,12 @@ Underfull \hbox (badness 10000) in paragraph at lines 15--15
  []
 
 (./includes/abstract.tex)
+Overfull \hbox (8.22807pt too wide) in paragraph at lines 1--15
+\T1/lmr/m/n/12 kryp-tografia je pre-vaºné za-loºená na prob-lé-moch, ktoré môºu
+ byº rie²ené po-mo-cou Shorovho
+ []
+
+
 Underfull \hbox (badness 10000) in paragraph at lines 1--15
 
  []
@@ -675,92 +687,85 @@ Underfull \hbox (badness 10000) in paragraph at lines 21--2
 
 
 ]
-(./includes/core.tex
+(./includes/core.tex [12]
+LaTeX Font Info:    Try loading font information for OMS+lmr on input line 18.
 
-LaTeX Warning: Citation `mceliece1978public' on page 12 undefined on input line
- 5.
-
-[12]
-
-LaTeX Warning: Citation `bitpunch2014' on page 13 undefined on input line 13.
-
-
-LaTeX Warning: Citation `shoufan2009novel' on page 13 undefined on input line 1
-3.
-
-
-LaTeX Warning: Citation `bitpunch2014' on page 13 undefined on input line 13.
-
+(/usr/local/texlive/2015/texmf-dist/tex/latex/lm/omslmr.fd
+File: omslmr.fd 2009/10/30 v1.6 Font defs for Latin Modern
+)
+LaTeX Font Info:    Font shape `OMS/lmr/m/n' in size <12> not available
+(Font)              Font shape `OMS/lmsy/m/n' tried instead on input line 18.
 Package hyperref Info: bookmark level for unknown algorithm defaults to 0 on in
-put line 16.
+put line 23.
+ [13]
+Underfull \hbox (badness 10000) in paragraph at lines 78--86
 
-Underfull \hbox (badness 2809) in paragraph at lines 46--46
-[]\T1/lmr/m/n/12 User agent aw-itcher
  []
 
 
-Underfull \hbox (badness 1168) in paragraph at lines 53--53
-[]\T1/lmr/m/n/12 Get anony-mous per-
+Underfull \hbox (badness 10000) in paragraph at lines 78--86
+
  []
 
 
-Package hyperref Warning: Composite letter `\textasciicaron+t'
-(hyperref)                not defined in PD1 encoding,
-(hyperref)                removing `\textasciicaron' on input line 62.
+Overfull \hbox (10.04614pt too wide) in paragraph at lines 90--91
+[]\T1/lmr/m/n/12 A key-encapsulation mech-a-nism $\OML/lmm/m/it/12 KEM \OT1/lmr
+/m/n/12 = (\OML/lmm/m/it/12 Gen; Enc; Dec\OT1/lmr/m/n/12 )$ \T1/lmr/m/n/12 con-
+sists of three polynomial-
+ []
 
-[13] [14]
+[14] [15] <img/architecture.png, id=209, 383.4325pt x 332.24126pt>
+File: img/architecture.png Graphic file (type png)
 
-Package hyperref Warning: Composite letter `\textasciicaron+l'
-(hyperref)                not defined in PD1 encoding,
-(hyperref)                removing `\textasciicaron' on input line 72.
+<use img/architecture.png>
+Package pdftex.def Info: img/architecture.png used on input line 116.
+(pdftex.def)             Requested size: 284.52756pt x 246.55428pt.
+ [16 <./img/architecture.png>] [17]
+<img/kobaraImai.png, id=223, 390.45876pt x 209.78375pt>
+File: img/kobaraImai.png Graphic file (type png)
 
-<img/vzhlad.png, id=167, 390.7398pt x 413.3844pt>
-File: img/vzhlad.png Graphic file (type png)
- <use img/vzhlad.png>
-Package pdftex.def Info: img/vzhlad.png used on input line 76.
-(pdftex.def)             Requested size: 227.62204pt x 240.8102pt.
-
-
-LaTeX Warning: Citation `anonlib' on page 15 undefined on input line 80.
-
+<use img/kobaraImai.png>
+Package pdftex.def Info: img/kobaraImai.png used on input line 196.
+(pdftex.def)             Requested size: 341.43306pt x 183.45148pt.
+ [18] [19 <./img/kobaraImai.png>]
 (/usr/local/texlive/2015/texmf-dist/tex/latex/listings/lstlang1.sty
 File: lstlang1.sty 2014/09/06 1.5e listings language file
 )
 (/usr/local/texlive/2015/texmf-dist/tex/latex/listings/lstmisc.sty
 File: lstmisc.sty 2014/09/06 1.5e (Carsten Heinz)
 )
-LaTeX Font Info:    Try loading font information for T1+lmss on input line 98.
+LaTeX Font Info:    Try loading font information for T1+lmss on input line 237.
+
 
 (/usr/local/texlive/2015/texmf-dist/tex/latex/lm/t1lmss.fd
 File: t1lmss.fd 2009/10/30 v1.6 Font defs for Latin Modern
 )
 LaTeX Font Info:    Font shape `T1/lmss/m/it' in size <10.95> not available
-(Font)              Font shape `T1/lmss/m/sl' tried instead on input line 99.
-LaTeX Font Info:    Try loading font information for OMS+lmss on input line 99.
-
-LaTeX Font Info:    No file OMSlmss.fd. on input line 99.
+(Font)              Font shape `T1/lmss/m/sl' tried instead on input line 238.
+LaTeX Font Info:    Try loading font information for OMS+lmss on input line 238
+.
+LaTeX Font Info:    No file OMSlmss.fd. on input line 238.
 
 
 LaTeX Font Warning: Font shape `OMS/lmss/m/it' undefined
 (Font)              using `OMS/cmsy/m/n' instead
-(Font)              for symbol `textasteriskcentered' on input line 99.
+(Font)              for symbol `textasteriskcentered' on input line 238.
 
-) [15 <./img/vzhlad.png>] [16] (./includes/conclusion.tex) [17
+) [20] (./includes/conclusion.tex) [21
+
+
+] (./includes/resume.tex) [22
 
 
 ]
-(./includes/resume.tex) [18
+(./ukazka_prace2.bbl) [23
 
 
-]
-No file ukazka_prace2.bbl.
-(./ukazka_prace2.pri)
+] (./ukazka_prace2.pri)
 \tf@pri=\write9
 \openout9 = `ukazka_prace2.pri'.
 
  [1
-
-
 
 
 ] (./includes/prilohaA.tex
@@ -782,13 +787,10 @@ Package atveryend Info: Empty hook `AfterLastShipout' on input line 31.
 Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 31.
 Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 31.
 Package rerunfilecheck Info: File `ukazka_prace2.out' has not changed.
-(rerunfilecheck)             Checksum: 0E301218D00A9518ABFCEFE22C77FEBD;768.
+(rerunfilecheck)             Checksum: BBD210621CB429211776542A891CD1F6;939.
 
 
 LaTeX Font Warning: Some font shapes were not available, defaults substituted.
-
-
-LaTeX Warning: There were undefined references.
 
 
 LaTeX Warning: There were multiply-defined labels.
@@ -796,32 +798,35 @@ LaTeX Warning: There were multiply-defined labels.
 Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 31.
  ) 
 Here is how much of TeX's memory you used:
- 11110 strings out of 493089
- 159495 string characters out of 6134842
- 315822 words of memory out of 5000000
- 14269 multiletter control sequences out of 15000+600000
- 72348 words of font info for 46 fonts, out of 8000000 for 9000
+ 11196 strings out of 493089
+ 160599 string characters out of 6134841
+ 298131 words of memory out of 5000000
+ 14301 multiletter control sequences out of 15000+600000
+ 88383 words of font info for 51 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 40i,10n,50p,1395b,1577s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 40i,7n,50p,926b,1579s stack positions out of 5000i,500n,10000p,200000b,80000s
 {/usr/local/texlive/2015/texmf-dist/fonts/enc/dvips/lm/lm-ec.enc}{/usr/local/
-texlive/2015/texmf-dist/fonts/enc/dvips/lm/lm-rm.enc}{/usr/local/texlive/2015/t
-exmf-dist/fonts/enc/dvips/lm/lm-mathsy.enc}{/usr/local/texlive/2015/texmf-dist/
-fonts/enc/dvips/lm/lm-mathit.enc}{/usr/local/texlive/2015/texmf-dist/fonts/enc/
-dvips/lm/lm-mathex.enc}</usr/local/texlive/2015/texmf-dist/fonts/type1/public/a
+texlive/2015/texmf-dist/fonts/enc/dvips/lm/lm-mathex.enc}{/usr/local/texlive/20
+15/texmf-dist/fonts/enc/dvips/lm/lm-rm.enc}{/usr/local/texlive/2015/texmf-dist/
+fonts/enc/dvips/lm/lm-mathsy.enc}{/usr/local/texlive/2015/texmf-dist/fonts/enc/
+dvips/lm/lm-mathit.enc}</usr/local/texlive/2015/texmf-dist/fonts/type1/public/a
 msfonts/cm/cmsy10.pfb></usr/local/texlive/2015/texmf-dist/fonts/type1/public/lm
-/lmbx12.pfb></usr/local/texlive/2015/texmf-dist/fonts/type1/public/lm/lmex10.pf
-b></usr/local/texlive/2015/texmf-dist/fonts/type1/public/lm/lmmi12.pfb></usr/lo
-cal/texlive/2015/texmf-dist/fonts/type1/public/lm/lmmi8.pfb></usr/local/texlive
-/2015/texmf-dist/fonts/type1/public/lm/lmr12.pfb></usr/local/texlive/2015/texmf
--dist/fonts/type1/public/lm/lmr6.pfb></usr/local/texlive/2015/texmf-dist/fonts/
-type1/public/lm/lmr8.pfb></usr/local/texlive/2015/texmf-dist/fonts/type1/public
-/lm/lmss10.pfb></usr/local/texlive/2015/texmf-dist/fonts/type1/public/lm/lmssbx
-10.pfb></usr/local/texlive/2015/texmf-dist/fonts/type1/public/lm/lmsso10.pfb></
-usr/local/texlive/2015/texmf-dist/fonts/type1/public/lm/lmsy10.pfb>
-Output written on ukazka_prace2.pdf (22 pages, 1994144 bytes).
+/lmbx12.pfb></usr/local/texlive/2015/texmf-dist/fonts/type1/public/lm/lmcsc10.p
+fb></usr/local/texlive/2015/texmf-dist/fonts/type1/public/lm/lmex10.pfb></usr/l
+ocal/texlive/2015/texmf-dist/fonts/type1/public/lm/lmmi12.pfb></usr/local/texli
+ve/2015/texmf-dist/fonts/type1/public/lm/lmmi8.pfb></usr/local/texlive/2015/tex
+mf-dist/fonts/type1/public/lm/lmr12.pfb></usr/local/texlive/2015/texmf-dist/fon
+ts/type1/public/lm/lmr6.pfb></usr/local/texlive/2015/texmf-dist/fonts/type1/pub
+lic/lm/lmr8.pfb></usr/local/texlive/2015/texmf-dist/fonts/type1/public/lm/lmri1
+2.pfb></usr/local/texlive/2015/texmf-dist/fonts/type1/public/lm/lmss10.pfb></us
+r/local/texlive/2015/texmf-dist/fonts/type1/public/lm/lmssbx10.pfb></usr/local/
+texlive/2015/texmf-dist/fonts/type1/public/lm/lmsso10.pfb></usr/local/texlive/2
+015/texmf-dist/fonts/type1/public/lm/lmsy10.pfb></usr/local/texlive/2015/texmf-
+dist/fonts/type1/public/lm/lmsy8.pfb>
+Output written on ukazka_prace2.pdf (27 pages, 2245980 bytes).
 PDF statistics:
- 305 PDF objects out of 1000 (max. 8388607)
- 263 compressed objects within 3 object streams
- 83 named destinations out of 1000 (max. 500000)
- 123 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 405 PDF objects out of 1000 (max. 8388607)
+ 352 compressed objects within 4 object streams
+ 126 named destinations out of 1000 (max. 500000)
+ 152 words of extra memory for PDF output out of 10000 (max. 10000000)
 

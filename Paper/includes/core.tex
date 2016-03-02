@@ -1,20 +1,27 @@
 \section{Preliminaries}
-\noindent The security of many cryptosystems relies on three hard problems: the integer factorization problem, the discrete logarithm problem or the elliptic curve discrete logarithm problem. However, these problems can be efficiently solved by a quantum computer using Shor's algorithm. [Postquantum crypto, D.J. Bernstein] Post-quantum cryptography refers to cryptographic algorithms that are meant to be secure against an attack by the quantum computer. Nowadays many cryptographers are designing and reviewing algorithms, striving for the best candidate for post-quantum world. One of the most reviewed candidate is McElice cryprosystem, which is described more in detail in the following section. 
+In this section, we introduce some important preliminary results, which are required throughout the thesis. We present notation, a short overview of McElice PKC, CCA security and the introduction to key encapsulation.
+
+\subsection{Notation}
+ If $x$ is a string, then $|x|$ denotes its length, while if $S$ is a set then $|S|$ denotes its size.
+ If $S$ is a set then $s \Leftarrow S$ denotes the operation of picking an element $s$ of $S$ uniformly at random. If $k \in N$ then $1^k$ denotes the string of k ones. If $P$ is a matrix, then $P^{-1}$ denotes an inverse matrix to the matrix $P$.
 
 \subsection{McElice cryptosystem}
-\noindent McElice cryptosystem was proposed by R. J.McEliece in 1978.~\cite{mceliece1978public} The cryptosystem belongs to a public key cryptography family of protocols, it basically means that two different keys are used for encryption and decryption. The most common public-key scheme used today is RSA. Security of RSA has been reviewed more in detail than any other public-key scheme, so that's why may be considered to be more secure. Due to fact that RSA uses shorter keys, we can find just rare implementations of McElice PKC in practice. However, McElice PKC provides much more faster encryption and decryption process of messages. [referencia]
-The original construction of McElice cryptosystem is based on Goppa codes, which seems to be resistant against cryptoanalysis with the right choice of parameters. Goppa codes are well suited for cryptographic application due to its generator matrix, which is hardly to be distinguished from a random binary matrix and also for their high error-correcting capabilities. Many other variants of the cryptosystem using various linear codes have been proposed over the years, but the most of them were subsequently proven to be insecure by researchers. [referencia] McElice cryptosystem is considered to be one of the best candidate for post-quantum cryptography, which causes a growing interest in implementation and cryptoanalysis. Security of McElice cryptosystem relies on a decoding problem, which is known to be NP-hard. [referencia]
-The most important part of secret key is without any doubts the description of the structured linear code, created by an irreducible polynom in key generation process. An efficient decoding algorithm for the chosen linear-code is required for successful decryption of messages. It is clear that the knowing the structure of the underlying linear code provides a
-way for fast decryption. McElice cryptosystem also takes an advantage from randomness. A public key is !"permuted" and "varied" form of chosen-linear code (secret key), which should be hardly distinguished from a completely random linear code. Now we can formally define McElice cryptosystem.
+\noindent McElice cryptosystem was proposed by R. J.McEliece in 1978.~\cite{mceliece1978public} The cryptosystem belongs to a public key cryptography family of protocols, it basically means that two different keys are used for encryption and decryption. McElice PKC provides fast way of encryption and decryption process of messages as was proven by ... [referencia]
+The original construction of MECS is based on Goppa codes, which seems to be secure with the right choice of parameters. Goppa codes are well suited for cryptographic application due to its generator matrix, which is hardly to be distinguished from a random binary matrix and also for their high error-correcting capabilities. Many other variants of the cryptosystem using various linear codes have been proposed over the years, but the most of them were subsequently proven to be insecure by researchers. [referencia] MECS is considered to be one of the best candidate for post-quantum cryptography, which causes a growing interest in implementation and further cryptoanalysis. Security of MECS relies on a decoding problem, which is known to be NP-hard. [referencia]
+The most important part of secret key is the description of the structured linear code, created by an irreducible polynom in key generation process. An efficient decoding algorithm for the chosen linear-code is required for successful decryption of messages. It is clear, that the knowing the structure of the underlying linear code provides a way for fast decryption. McElice cryptosystem takes an advantage from randomness. A public key is "permuted" and "varied" form of chosen-linear code (secret key), which should be hardly distinguished from a completely random linear code. We can formally define McElice cryptosystem by describing algorithms $\Pi = (Gen, Enc, Dec)$ as follows.
 
-\subsubsection{Key generation}
-\paragraph{Generovanie kæ˙ËovÈho p·ru} % (fold)
+
+\paragraph{Key generation algorithm} % (fold)
 \label{par:generovanie_k_ov_ho_p_ru}
-Alg.~\ref{mecs_keygen} shows a process of generation of key pair. In order to generate key pair, we have to define Goppa code, which is created over irreducible polynom. Pre n·jdenie danÈho polynÛmu mÙûeme pouûiù algoritmus z~\cite{bitpunch2014}. Algoritmus testuje ireducibilnosù n·hodne zvolenÈho polynÛmu danÈho stupÚa. Pre zostrojenie kontrolnej matice kÛdu je pouûit˝ algoritmus uv·dzan˝ v~\cite{shoufan2009novel}. Pomocou Gaussovej eliminaËnej metÛdy~\cite{bitpunch2014} upravÌme kontroln˙ maticu na~systematick˝ tvar a n·sledne je moûnÈ vytvoriù generuj˙cu maticu. V˝stupom algoritmu je dvojica: priv·tny a verejn˝ kæ˙Ë. Private key - $S,G,P$ (random singular matrix, generation matrix, permutation matrix). Public key - $\widehat{G},t$ (masked generation matrix and number of error, which is capable to correct). 
+In order to generate keys, we have to define a Goppa code, which is created over irreducible polynomial. The output of this algorithm is: 
+\begin{itemize}
+	\item Private key - $S,G,P$ (random singular matrix, generation matrix, permutation matrix). \item Public key - $\widehat{G},t$ (masked generation matrix and number of error, which is capable to correct up to t errors).
+\end{itemize} 
+
 
 \begin{algorithm}[H]
 	\caption{Key generation}
-	\label{mecs_keygen}
+	\label{Key_gen}
 	\begin{enumerate}
 		\item Pick a random irreducible polynom $g$ over $GF(2^m)$ of degree $t$,
 		\item Compute a $k \times n$ generation matrix $G$, of goppa code $\Gamma=(\alpha_1,...,\alpha_n,g)$, with dimension $k=n-td$,
@@ -26,58 +33,190 @@ Alg.~\ref{mecs_keygen} shows a process of generation of key pair. In order to ge
 \end{algorithm}
 % paragraph generovanie_k_ov_ho_p_ru (end)
 
+\begin{algorithm}[H]
+	\caption{Encryption}
+	\label{mecs_keygen}
+	\begin{enumerate}
+		\item Let $m$ be a $k$-bit message, and let $e$ be an random $n$-bit vector
+		with $wH(e) \le t$. Then $c = m \cdot \widehat{G} + e$ is a ciphertext.
+	\end{enumerate}
+\end{algorithm}
+% paragraph encryption (end)
 
+\begin{algorithm}[H]
+	\caption{Decryption}
+	\label{mecs_keygen}
+ 	\begin{enumerate}
+ 		\item Calculate  $S^{-1}$ and $P^{-1}$,
+ 		\item Calculate $\textbf{c'}=\textbf{c}P^{-1}$,
+ 		\item Apply proper decoding algorithm $Dec$ of the code $\Gamma$ to decode $\textbf{c'}$ to $\widehat{\textbf{m}}$,
+ 		\item Obtain $m$ by  $\textbf{m}=\widehat{\textbf{m}}S^{-1}$.
+ 	\end{enumerate}
+\end{algorithm}
 
-\begin{table}[!htbp]
-\begin{center}
-\begin{tabular}{p{4cm}|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c}
-& \multicolumn{14}{c}%
-	 {\textbf{Funkcia}}\\ \hline
-&&&& & &\multicolumn{8}{c}%
-	 {Modifik·cia}\\ 
-\textbf{Modul} &\begin{sideways} zobrazenie hlaviËky \end{sideways} &\begin{sideways} blokovanie skriptov \end{sideways} &\begin{sideways} zmena IP \end{sideways} & \begin{sideways} zmena lokaliz·cie \end{sideways} & \begin{sideways} zmazanie/blokovanie cookies \end{sideways} & \begin{sideways} blokovanie trackerov \end{sideways}  & \begin{sideways} popis \end{sideways} & \begin{sideways}pouûÌvateæsk˝ agent\end{sideways} & \begin{sideways} kÛdovÈ oznaËenie prehliadaËa \end{sideways} & \begin{sideways} n·zov prehliadaËa \end{sideways} & \begin{sideways} verzia prehliadaËa \end{sideways} & \begin{sideways} platforma \end{sideways} & \begin{sideways} v˝robca prehliadaËa \end{sideways} & \begin{sideways} oznaËenie v˝robcu prehliadaËa \end{sideways} \\ \hline
-User agent switcher & & & & & &  & X & X & X & X & X & X & X & X  \\ \hline
-Ghostery &  && & & X & X &  &  & & & & & & \\  \hline
-Better privacy && &  & & X &  &  &  & & & & & & \\  \hline
-Anonymox &  && X & X & X &  & X & X & & & & & & \\  \hline
-Modify headers & & &  &  & X &  &  & X &  &  &  & & &  \\  \hline
-Request policy & & &  &  & & X  &  &  &  &  &  & & &   \\  \hline
-Live HTTP headers & X& &  &  & &  &  &  &  &  &  & & &   \\  \hline
-User agent awitcher for chrome & & &  &  & &  & X & X &  &  &  & & &   \\  \hline
-Header hacker & & &  &  & &  & X & X & X & X & X & X & X & X    \\  \hline
-Mod header & & &  &  & &  & X & X & X & X & X & X & X & X    \\  \hline
-Script no & &X &  &  & &  &  &  &  &  &  &  &  &     \\  \hline
-No script & &X &  &  & &  &  &  &  &  &  &  &  &     \\  \hline
-Proxify it & & &X  & X & &  &  &  &  &  &  &  &  &     \\  \hline
-I'm not here & & &  & X & &  &  &  &  &  &  &  &  &     \\  \hline
-Get anonymous personal edition & &X &X &X &X&X &  &  &  &  &  &  &  &     \\  \hline
-Anonymous browsing toolbar & & & X & X & &  &  &  &  &  &  &  &  &     \\  \hline
-Easy hide your IP and surf anonymously & & & X & X& &  &  & X & X & X & X &  &  &     \\  \hline
-\end{tabular}
-\caption{Moduly a ich funkcie pri anonymiz·cii}
-\label{modulyVlastnosti}
-\end{center}
-\end{table}
+\noindent Note that a linear code, which is part of public key G is permutation-equivalent to the chosen secret key. As was mentioned above, the original construction in [25] uses irreducible binary Goppa codes, for which an efficient decoding algorithm was presented
+by Patterson [30]. In order to apply Patterson's algorithm, the polynomial generating
+the Goppa code must be known. Considering this fact, the chosen polynomial is considered to be a part of secret key, due to the fact that describes a structure of underlying linear code.
 
-\subsection{Anonymn· sieù}
-\noindent Anonymn· sieù je sieù serverov, medzi ktor˝mi d·ta prech·dzaj˙ öifrovanÈ. V anonymn˝ch sieùach d·ta prech·dzaj˙ z poËÌtaËa pouûÌvateæa, odkiaæ bola poûiadavka poslan·, cez viacerÈ proxy smerovaËe, z ktor˝ch kaûd˝ spr·vu doplnÌ o smerovanie a zaöifruje vlastn˝m kæ˙Ëom. Cesta od ...
+\subsection{CCA security}
+In order to define IND-CCA, we need to consider following experiment with a private-key encryption scheme
+$\Pi$ = (Gen, Enc, Dec), adversary $A$, and value $n$ for the security parameter.
 
+\begin{algorithm}[H]
+	\caption{The CCA experiment}
+	\label{mecs_keygen}
+	\begin{enumerate}
+		\item A random key $k$ is generated by running  $Gen(1^n)$.
+		\item The adversary $A$ is given input $1^n$ and oracle access to encryption and decryption. It outputs a pair of messages $m_{0},m_{1}$ s.t $|m_{0}| = |m_{1}|$.
+		\item A random bit $b \gets \{0,1\}$ is chosen, and then a cipher text is computed and subsequently given to A. We call c the challenge.
+		\item Adversary continues to have an access to oracle encryption and decryption, however it is not allowed to query later challenge itself.  
+		\item The output of the experiment if 1 if $b' = b$, otherwise 0. 
+	\end{enumerate}
+\end{algorithm}
+% paragraph generovanie_k_ov_ho_p_ru (end)
 
-\subsection{Funkcionalita}
-\noindent  RozöÌrenie tieû okrem splnenia öpecifik·cie malo pre prehæadnosù a overenie funkËnosti zobrazovaù ˙daje, ktorÈ boli na server odoslanÈ. Zoznam ˙dajov odoslan˝ch na server, sa mal ukladaù do kr·tkodobej histÛrie, aby nemal pouûÌvateæ k dispozÌciÌ len najnovöie ˙daje, ale aj ˙daje odoslanÈ v nejakom Ëasovom obdobÌ. 
+\noindent A private-key encryption scheme $\Pi$ is CCA-secure if for all
+probabilistic polynomial-time adversaries A there exists a negligible function $negl$ such that:
+\newline
+\newline
+\centerline{$Pr[PrivK_{A,\Pi}(n) = 1] \le \dfrac{1}{2} + negl(n)$ }
+\newline
+\newline
+\noindent where the probability is taken over all random coins used in the experiment. 
 
-\subsubsection{Funkcionalita2}
-\noindent Samozrejmosùou bolo nastavenie zapnutia rozöÌrenia pri ötarte, prÌpadne interval zmeny odosielan˝ch ˙dajov.
+\noindent The formal definition of CCA security is discussed in more detail at [modern crypt].
 
-\subsection{Vzhæad}
-\noindent DÙleûitou poûiadavkou kladenou na rozöÌrenie bolo prÌjemnÈ pouûÌvateæskÈ rozhranie. Z~tohto dÙvodu malo rozöÌrenie obsahovaù zoznam modifikovan˝ch vlastnostÌ a tlaËidlo pre prÌstup k nastaveniam rozöÌrenia v jednoduchej a praktickej forme. Predpokladan˝ vzhæad je zobrazen˝ na obr·zku Ë. \ref{vzhladobr}.
+\subsection{Key encapsulation}
+A key-encapsulation mechanism $KEM = (Gen,Enc,Dec)$ consists of three polynomial-time algorithms.
+\begin{itemize}
+	\item Randomized algorithm $Gen$ for generation of key pair for security parameter $k \in N$ produces $(priv,pub) \Leftarrow Gen(1^k)$,
+	\item A pair $(K,C) \Leftarrow Enc(pub)$ is provided by randomized encapsulation algorithm, where $K \in K(k)$ is uniformly distributed symmetric key and $C$ is a ciphertext,
+	\item Decryption algorithm provides a way to extract original key $K \leftarrow Dec(priv,C)$
+\end{itemize}   
+
+Obviously, we estimate the decryption to be deterministic in such a way that $\forall k \in N$ and $\forall (K,C) \Leftarrow Enc(pub)$ we have probability $Pr[Dec(priv,C) = K] = 1$. One of the most common requirement of KEM is  CCA indistinguishability, which is discussed more in detail at[referenca na clanok 418].
+TODO: dostudovat
+
+ 
+\section{Analysis}
+\subsection{Bitpunch library}
+In this section, we present current status of Bitpunch library. 
+In other years, the project called Bitpunch implemented very lightweight crypto library in C language. Following list shows already implemented features of the library, which are points of our interests:
+\begin{itemize}
+	\item modular architecture,
+	\item variation of Pointcheval conversion,
+	\item simple testing environment
+\end{itemize} 
+
+\subsubsection{Modular architecture}
+Modular architecture of the library provides easy extendibility. The modules are interconnected via relationships, which are depicted on Figure \ref{architecture}. The simplicity of the library itself allows us to implement another CCA conversion.
+
 \begin{figure}[!htbp]
-  \centering
-  \includegraphics[width=8cm]{img/vzhlad.png}
-  \caption{Predpokladan˝ vzhæad rozöÌrenia.}
-  \label{vzhladobr}
-\end{figure}	 
-\noindent DÙleûitou poûiadavkou kladenou na rozöÌrenie bolo prÌjemnÈ pouûÌvateæskÈ rozhranie.\cite{anonlib} Z~tohto dÙvodu malo rozöÌrenie obsahovaù zoznam modifikovan˝ch vlastnostÌ a tlaËidlo pre prÌstup k nastaveniam rozöÌrenia v jednoduchej a praktickej forme. Predpokladan˝ vzhæad je zobrazen˝ na obr·zku Ë. \ref{vzhladobr}.
+	\centering
+	\includegraphics[width=10cm]{img/architecture.png}
+	\caption{Modular architecture of Bitpunch.}
+	\label{architecture}
+\end{figure}
+
+\begin{itemize}
+	\item asn1 - provides import/export of keys using libtasn1,
+	code - provides implementation of used codes (Goppa, QC-MDPC [reff]),
+	\item crypto: 
+		\begin{itemize}
+			\item cca2 - implementation of CCA2 conversions,
+			\item hash - implemented hash from PolarSSL 
+			\item mecsbasic - implementation of basic McElice PKC,
+		\item padding - implementation of padding,
+		\end{itemize} 
+	\item math - provides arithmetic functions over $Gf(2^m)$, etc.
+	\item prng - API for a pseudo random generator
+\end{itemize} 
+As we consider the architecture to be ....TODO: treba popisat, ze libka je dobre rozdelena na moduly a nebudeme to menit
+
+\subsubsection{CCA conversions}
+In this section, we discuss CCA conversions, which should provide indistinguishability under
+adaptive chosen-ciphertext attacks.
+
+The original version of MECS is not secure in theoretical way. In practice, a PKC can be considered secure to use if it provides IND-CCA security. The current version of Bitpunch includes a version of Pointcheval conversion. An input of the conversion is a plaintext. 
+ 
+\paragraph{Variant of Pointcheval CCA2 conversion} % (fold)
+\label{par:cca2_pointcheval_konverzia}
+\begin{algorithm}[H]
+	\caption{The Pointcheval CCA2 conversion}
+	\label{mecs_kgen}
+	\begin{enumerate}
+	\item An input of MECS is $\widehat{m} = r_1 || hash(m || r_2)$, $r_1$ is a random bit vector with lenght $k - l$ and output of hash function is indistinguishable from random $l$-bit vector,
+	\item A ciphertext consists of $(c_1, c_2, c_3) = (\widehat{m}\widehat{G} + e, hash(r_1) + m, hash(e) + r_2)$.
+	\end{enumerate}
+\end{algorithm}
+
+This version of Pointecheval conversion is susceptible to the following attack.
+TODO: treba dopisat utok
+
+
+\noindent As it was discussed at [Komara and Imai], the original version of MECS is susceptible to partially-known plaintext,
+related plaintext, reaction attacks and also does not provide security against malleability. However, Kobara and Imai presented two slightly different CCA conversion of MECS, which are considered to be secure against already mentioned attacks. These conversions require the use of random oracles (hash functions) [2] to randomize the input and break relations of
+the plaintext and ciphertext. Unfortunately, conversions cause an overhand since some redundant data are necessary.
+As is depicted on the figure [referencie], an algorithm for encryption is straightforward and can be described as follow: The input of this process is a public key $(G',t)$, a message $m$ and constant $Const$, which sum of its $(m||Const)$ length. The output of encryption is a ciphertext. The decryption process is described respectively by following algorithms.
+
+\begin{algorithm}[H]
+	\caption{Kobara-Imai CCA2 gamma conversion - encryption}
+	\label{kobara-enc}
+	\begin{enumerate}
+		\item Let $m$ be a message, a constant $Const$ and a random $r$-bit number $Rand$,
+		\item Calculate $y_1 = Prng(Rand) + (m || Const)$,
+		\item Calculate $y_2 = HASH(y_1) + Rand$,
+		\item Let $y_1 = y_1' || y_4 || y_3$,
+		\item Let $y_5 = y_2 || y_1'$, 
+		\item Encode error vector $e = CONV(y_4)$,
+		\item Encrypt $y_3$ using MECS such that $y_6 = MECS_{enc}(e, y_3) = y_3G' + CONV(y_4)$, 
+		\item A ciphertext is $c = y_5 || y_6$.
+	\end{enumerate}
+\end{algorithm}
+
+
+\begin{algorithm}[H]
+	\caption{Kobara-Imai CCA2 gamma conversion - decryption}
+	\label{kobara-dec}
+	\begin{enumerate}
+		\item Let $c$ be the received message, $c = y_5 || y_6$ and the constant $Const$,
+		\item Decrypt $y_6$ using MECS $(e, y_3) = MECS_{dec}(y_6)$, where $e$ is the error vector,
+		\item Decode $y_4 = CONV^{-1}(e)$,
+		\item Let $y_5 = y_2 || y_1'$, we reconstruct $y_2$ and $y_1$ such that $y_1 = y_1' || y_4 || y_3$,
+		\item Calculate $Rand = y_2 + HASH(y_1)$,
+		\item Calculate $(m||Const') = PRNG(Rand) + y_1$,
+		\item If $Const'$ is equal to $Const$, the integrity of message is not corrupted,
+		\item The plaintext is $m$.
+	\end{enumerate}
+\end{algorithm}
+
+  
+ \begin{figure}[!htbp]
+ 	\centering
+ 	\includegraphics[width=12cm]{img/kobaraImai.png}
+ 	\caption{An illustration of the Kobara-Imai CCA-2 secure conversion of MECS.}
+ 	\label{kobara-imai}
+ \end{figure}
+ 
+\newpage
+\label{kobara imai}
+\begin{itemize}
+	\item $Rand$ is a random session key (with size given by the required security,
+	level for symmetric encryption).
+	\item $PRNG$ is a cryptographically secure pseudorandom generator (can be
+	a symmetric encryption algorithm in practice).
+	\item $Const$ is a public constant (with size given by the required security level
+	for authentication).,
+	\item $HASH$ is a cryptographically secure hash function.
+	\item $CONV$ is a bijection function, which converts an integer into the corresponding error vector.
+	\item $MECS$ is a standard MECS routine (with e as an additional input).
+\end{itemize}
+
+\newpage
+
+
+\section{Our contribution}
+
 
 \begin{algorithm}
 \lstset{
@@ -109,6 +248,6 @@ main()
 {
     printf("Hello World");
 }\end{lstlisting}
- \caption{Uk·ûka algoritmu}
+ \caption{algoritmu}
  \label{euclid}
 \end{algorithm}

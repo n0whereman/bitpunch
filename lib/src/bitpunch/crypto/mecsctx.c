@@ -57,6 +57,8 @@ int BPU_mecsInitCtx(BPU_T_Mecs_Ctx **ctx, const BPU_T_UN_Mecs_Params *params, co
     }
     ctx_p = *ctx;
     ctx_p->type = type;
+    //added a predetermined public constant
+    BPU_gf2VecMalloc(&ctx_p->pub_constant,8);
 
     switch (type) {
     case BPU_EN_MECS_BASIC_GOPPA:
