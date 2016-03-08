@@ -23,13 +23,13 @@
 #ifndef MBEDTLS_AES_H
 #define MBEDTLS_AES_H
 
-
 #include <stddef.h>
 #include <stdint.h>
 
 /* padlock.c and aesni.c rely on these values! */
 #define MBEDTLS_AES_ENCRYPT     1
 #define MBEDTLS_AES_DECRYPT     0
+#define MBEDTLS_CIPHER_MODE_CBC
 
 #define MBEDTLS_ERR_AES_INVALID_KEY_LENGTH                -0x0020  /**< Invalid key length. */
 #define MBEDTLS_ERR_AES_INVALID_INPUT_LENGTH              -0x0022  /**< Invalid data input length. */

@@ -22,12 +22,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #ifdef BPU_CONF_AES
 #include <stdint.h>
+#define AES_BLOCK_SIZE 16
+#define BITS_PER_BYTE 8
 
 #include <bitpunch/math/gf2types.h>
 
-#define BPU_HASH_LEN 64
+int BPU_gf2VecAesEnc(BPU_T_GF2_Vector *out,const BPU_T_GF2_Vector *in, BPU_T_GF2_Vector *key,  BPU_T_GF2_Vector *iv);
 
-//TODO: TREBA SIFRUVAT I DESIFRUVATint BPU_gf2VecHash(BPU_T_GF2_Vector *out, const BPU_T_GF2_Vector *in);
+int BPU_gf2VecAesDec(BPU_T_GF2_Vector *out,const BPU_T_GF2_Vector *in, BPU_T_GF2_Vector *key,  BPU_T_GF2_Vector *iv);
 
 #endif // BPU_CONF_AES
 

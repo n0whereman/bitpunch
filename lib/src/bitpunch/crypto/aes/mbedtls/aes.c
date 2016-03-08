@@ -25,7 +25,8 @@
  *  http://csrc.nist.gov/publications/fips/fips197/fips-197.pdf
  */
 
-#if defined(MBEDTLS_AES_C)
+
+//#if defined(MBEDTLS_AES_C)
 
 #include <string.h>
 
@@ -1481,4 +1482,4 @@ exit:
 
 #endif /* MBEDTLS_SELF_TEST */
 
-#endif /* MBEDTLS_AES_C */
+//#endif /* MBEDTLS_AES_C */
