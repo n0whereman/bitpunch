@@ -346,9 +346,9 @@ int main(int argc, char **argv) {
      BPU_mecsFreeParamsQcmdpc(&params);
  #endif
 
- #ifdef BPU_CONF_MECS_HYBRID
+ /*#ifdef BPU_CONF_MECS_HYBRID
      rc += testAesEncDec();
- #endif
+ #endif*/
 
 	return rc;
 }

@@ -23,6 +23,8 @@ CONFIG += console
 CONFIG -= app_bundle
 CONFIG -= qt
 
+LIBS += -L/usr/local/lib/libmbedtls.a -lmbedtls
+
 INCLUDEPATH += \
     lib/src/
 SOURCES += \
@@ -101,3 +103,5 @@ OTHER_FILES += \
 DISTFILES += \
     lib/asn1/MecsPriKey.asn \
     lib/asn1/MecsPubKey.asn
+
+

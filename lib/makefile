@@ -25,7 +25,7 @@
 # $? - names of sources, which are newer than target
 
 PREFIX_SRC = src
-INCLUDE_PATH = -Isrc/ -I/Users/momo/Desktop/Skolka/DIPLOMKA/libtasn1-4.5/lib/
+INCLUDE_PATH = -Isrc/ -I/Users/momo/Desktop/Skolka/DIPLOMKA/libtasn1-4.5/lib/ -I/usr/local/include/mbedtls
 
 ifndef CFLAGS
 	CFLAGS += -O2 -Wall -DBPU_CONF_FULL -DERROR_L
@@ -40,6 +40,7 @@ else ifeq ($(ARCH), i586)
 endif
 
 LIBTASN1 = /usr/local/lib/libtasn1.a
+LIBMBEDTLS = /usr/local/lib/libmbedtls.a
 
 # compiler
 CC = gcc $(INCLUDE_PATH)
@@ -116,7 +117,7 @@ shared-lib: prepare-dir $(PICS)
 	$(CC) $(CFLAGS) -c $< -o $@
 
 static-lib: prepare-dir $(OBJS)
-	cd $(BUILD_DIR) && ar -x $(LIBTASN1)
+	cd $(BUILD_DIR) && ar -x $(LIBTASN1) && ar -x $(LIBMBEDTLS)
 	ar rcs $(DIST_DIR)/libbpumecs.a $(OBJS) $(BUILD_DIR)/*.o
 
 ############################# prepare dirs

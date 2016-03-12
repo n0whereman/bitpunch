@@ -19,6 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define AES_H
 
 #include <bitpunch/config.h>
+#include <mbedtls/aes.h>
 
 #ifdef BPU_CONF_AES
 #include <stdint.h>

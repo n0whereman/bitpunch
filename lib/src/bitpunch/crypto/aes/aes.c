@@ -18,31 +18,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "aes.h"
 
 #ifdef BPU_CONF_AES
-#include "mbedtls/mbedtls/aes.h"
+
+#include "mbedtls/aes.h"
+#include "mbedtls/config.h"
+#include "mbedtls/platform.h"
 
 #include <bitpunch/debugio.h>
 #include <bitpunch/math/gf2.h>
 
-/*int BPU_gf2VecHash(BPU_T_GF2_Vector *out, const BPU_T_GF2_Vector *in) {
-	uint8_t md[BPU_HASH_LEN];
-
-	if (out->len != BPU_HASH_LEN * 8) {
-		BPU_printError("Wrong vector len %d", out->len);
-
-		return -1;
-	}
-	// if input len is not divisible by 4, then it is not complete vector
-	if (in->len % 8) {
-//		BPU_printError("Wrong input vector len %d, should be divisible by 8", in->len);
-		BPU_printWarning("input vector len %d, should be divisible by 8", in->len);
-	}
-	// hash vector
-	sha512((uint8_t *)in->elements, in->len / 8, md, 0);
-	// copy digest to vector
-	memcpy(out->elements, md, BPU_HASH_LEN);
-
-	return 0;
-}*/
 
 int BPU_gf2VecAesEnc(BPU_T_GF2_Vector *out, const BPU_T_GF2_Vector *in,  BPU_T_GF2_Vector *key,  BPU_T_GF2_Vector *iv){
     uint8_t output[out->len/8];
@@ -58,6 +41,7 @@ int BPU_gf2VecAesEnc(BPU_T_GF2_Vector *out, const BPU_T_GF2_Vector *in,  BPU_T_G
     //mbedtls_aes_crypt_cbc(&enc_ctx, MBEDTLS_AES_ENCRYPT, in->len / 8, (uint8_t *) iv->elements, (uint8_t *) in->elements, output );
     mbedtls_aes_crypt_cbc(&enc_ctx, MBEDTLS_AES_ENCRYPT, in->len / (BITS_PER_BYTE), (uint8_t *) iv->elements,(uint8_t *) in->elements, output);
     memcpy(out->elements, output, out->len / 8);
+    mbedtls_aes_free(&enc_ctx);
     //BPU_printGf2Vec(out);
     //mbedtls_aes_free( &enc_ctx );
     return 0;
