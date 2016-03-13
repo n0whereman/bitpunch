@@ -25,10 +25,10 @@
 # $? - names of sources, which are newer than target
 
 PREFIX_SRC = src
-INCLUDE_PATH = -Isrc/ -I/Users/momo/Desktop/Skolka/DIPLOMKA/libtasn1-4.5/lib/ -I/usr/local/include/mbedtls
+INCLUDE_PATH = -Isrc/
 
 ifndef CFLAGS
-	CFLAGS += -O2 -Wall -DBPU_CONF_FULL -DERROR_L
+	CFLAGS += -g -Wall -DBPU_CONF_FULL -DERROR_L
 endif
 
 # get libtasn1 path
@@ -39,8 +39,9 @@ else ifeq ($(ARCH), i586)
 	ARCH =i386
 endif
 
+#LIBTASN1 = $(shell dirname `locate libtasn1.a | grep ${ARCH} | head -n 1 | cut -d '>' -f 2`)/libtasn1.a
 LIBTASN1 = /usr/local/lib/libtasn1.a
-LIBMBEDTLS = /usr/local/lib/libmbedtls.a
+LIBMBEDTLS = /usr/local/lib/libmbedcrypto.a
 
 # compiler
 CC = gcc $(INCLUDE_PATH)
