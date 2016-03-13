@@ -25,6 +25,30 @@
 #include <bitpunch/crypto/hash/sha512.h>
 #include <bitpunch/asn1/asn1.h>
 #include <bitpunch/crypto/aes/aes.h>
+#include <bitpunch/crypto/kdf/pbkdf2.h>
+#include <bitpunch/crypto/mac/mac.h>
+#include <bitpunch/scheme/hybrid/scheme.h>
+
+int testKDF(){
+    BPU_T_GF2_Vector *extended_pwd, *pwd;
+    BPU_gf2VecMalloc(&pwd,64);
+    //pomocny
+    BPU_gf2VecMalloc(&extended_pwd,384);
+    BPU_gf2VecKDF(extended_pwd,pwd);
+    return 0;
+}
+
+int testMAC(){
+    BPU_T_GF2_Vector *in, *key, *out;
+    BPU_gf2VecMalloc(&key,64);
+    BPU_gf2VecRand(key,3);
+    BPU_gf2VecMalloc(&in,64);
+    BPU_gf2VecRand(in,3);
+    BPU_gf2VecMalloc(&out,512);
+    //pomocny
+    BPU_gf2VecComputeHMAC(out,in, key);
+    return 0;
+}
 
 int testAesEncDec(){
     int rc = 0;
@@ -51,6 +75,52 @@ int testAesEncDec(){
 
     if (BPU_gf2VecCmp(pt,tmp) == 0)
         fprintf(stderr, "PARADNE.\n");
+    return rc;
+}
+
+int testHybridMecs(){
+    int rc = 0;
+    // MUST BE NULL
+    BPU_T_Mecs_Ctx *ctx = NULL;
+    BPU_T_Mecs_Ctx *ctx_2 = NULL;
+    BPU_T_UN_Mecs_Params params;
+
+    /***************************************/
+    // mce initialisation t = 50, m = 11
+    fprintf(stderr, "Basic GOPPA Initialisation...\n");
+    if (BPU_mecsInitParamsGoppa(&params, 11, 50, 0)) {
+        return 1;
+    }
+
+    if (BPU_mecsInitCtx(&ctx, &params, BPU_EN_MECS_BASIC_GOPPA)) {
+
+        return 1;
+    }
+    /***************************************/
+    fprintf(stderr, "Key generation...\n");
+    // key pair generation
+    if (BPU_mecsGenKeyPair(ctx)) {
+        BPU_printError("Key generation error");
+
+        return 1;
+    }
+
+    if (BPU_mecsInitCtx(&ctx_2, &params, BPU_EN_MECS_BASIC_GOPPA)) {
+        return 1;
+    }
+    /***************************************/
+    fprintf(stderr, "Key generation...\n");
+    // key pair generation
+    if (BPU_mecsGenKeyPair(ctx_2)) {
+        BPU_printError("Key generation error");
+
+        return 1;
+    }
+    BPU_HybridMecs(ctx,ctx_2);
+    BPU_mecsFreeCtx(&ctx);
+    BPU_mecsFreeCtx(&ctx_2);
+    BPU_mecsFreeParamsGoppa(&params);
+
     return rc;
 }
 
@@ -348,6 +418,9 @@ int main(int argc, char **argv) {
 
  #ifdef BPU_CONF_MECS_HYBRID
      rc += testAesEncDec();
+     rc += testKDF();
+     rc += testMAC();
+     rc += testHybridMecs();
  #endif
 
 	return rc;

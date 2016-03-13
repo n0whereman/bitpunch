@@ -42,8 +42,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     #ifndef BPU_CONF_SHA_512
         #define BPU_CONF_SHA_512
     #endif
+    #ifndef BPU_CONF_KDF
+      #define BPU_CONF_KDF
+    #endif
     #ifndef BPU_CONF_AES
         #define BPU_CONF_AES
+    #endif
+    #ifndef BPU_CONF_MAC
+        #define BPU_CONF_MAC
     #endif
 	#ifndef BPU_CONF_FULL_MECS
 		#define BPU_CONF_FULL_MECS
@@ -73,7 +79,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #if defined(BPU_CONF_MECS_HYBRID)
     #ifndef BPU_CONF_AES
-        #define BPU_CONF_AES
+       #define BPU_CONF_AES
+    #endif
+    #ifndef BPU_CONF_KDF
+       #define BPU_CONF_KDF
+    #endif
+    #ifndef BPU_CONF_MAC
+       #define BPU_CONF_MAC
     #endif
 #endif
 
