@@ -30,11 +30,12 @@
 #include <bitpunch/scheme/hybrid/scheme.h>
 
 int testKDF(){
-    BPU_T_GF2_Vector *extended_pwd, *pwd;
+    BPU_T_GF2_Vector *extended_pwd, *pwd, *salt;
     BPU_gf2VecMalloc(&pwd,64);
+    BPU_gf2VecMalloc(&salt,64);
     //pomocny
     BPU_gf2VecMalloc(&extended_pwd,384);
-    BPU_gf2VecKDF(extended_pwd,pwd);
+    BPU_gf2VecKDF(extended_pwd,pwd, salt);
     return 0;
 }
 
@@ -55,11 +56,11 @@ int testAesEncDec(){
     fprintf(stderr, "Aes - ENC/DEC testing...\n");
     BPU_T_GF2_Vector *pt, *ct,*key,*iv,*tmp, *ivOrig;
     //Testing plaintext vector - lenght 384 bit ()
-    BPU_gf2VecMalloc(&pt,512);
+    BPU_gf2VecMalloc(&pt,256);
     //pomocny
-    BPU_gf2VecMalloc(&tmp,512);
+    BPU_gf2VecMalloc(&tmp,256);
     BPU_gf2VecCopy(tmp,pt);
-    BPU_gf2VecMalloc(&ct,512);
+    BPU_gf2VecMalloc(&ct,256);
     //Testing iv vector, must be 16 bytes
     BPU_gf2VecMalloc(&iv,16*8);
     BPU_gf2VecRand(iv,3);
@@ -116,7 +117,15 @@ int testHybridMecs(){
 
         return 1;
     }
-    BPU_HybridMecs(ctx,ctx_2);
+
+    if(BPU_HybridMecs(ctx,ctx_2)){
+        BPU_printError("Hybrid scheme error");
+        BPU_mecsFreeCtx(&ctx);
+        BPU_mecsFreeCtx(&ctx_2);
+        BPU_mecsFreeParamsGoppa(&params);
+    return 1;
+    }
+
     BPU_mecsFreeCtx(&ctx);
     BPU_mecsFreeCtx(&ctx_2);
     BPU_mecsFreeParamsGoppa(&params);

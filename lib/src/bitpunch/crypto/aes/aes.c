@@ -33,9 +33,6 @@ int BPU_gf2VecAesEnc(BPU_T_GF2_Vector *out, const BPU_T_GF2_Vector *in,  BPU_T_G
             BPU_printWarning("input vector len %d, should be divisible by 16", in->len);
     }
     mbedtls_aes_context enc_ctx;
-
-    BPU_printGf2Vec(in);
-
     mbedtls_aes_init(&enc_ctx);
     mbedtls_aes_setkey_enc(&enc_ctx, (uint8_t *) key->elements, 256);
     //mbedtls_aes_crypt_cbc(&enc_ctx, MBEDTLS_AES_ENCRYPT, in->len / 8, (uint8_t *) iv->elements, (uint8_t *) in->elements, output );
