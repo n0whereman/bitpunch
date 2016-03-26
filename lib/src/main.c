@@ -34,8 +34,8 @@ int testKDF(){
     BPU_gf2VecMalloc(&pwd,64);
     BPU_gf2VecMalloc(&salt,64);
     //pomocny
-    BPU_gf2VecMalloc(&extended_pwd,384);
-    BPU_gf2VecKDF(extended_pwd,pwd, salt);
+    BPU_gf2VecMalloc(&extended_pwd,512);
+    BPU_gf2VecKDF(extended_pwd,pwd, salt, 512);
     return 0;
 }
 
@@ -94,7 +94,6 @@ int testHybridMecs(){
     }
 
     if (BPU_mecsInitCtx(&ctx, &params, BPU_EN_MECS_BASIC_GOPPA)) {
-
         return 1;
     }
     /***************************************/
@@ -102,7 +101,6 @@ int testHybridMecs(){
     // key pair generation
     if (BPU_mecsGenKeyPair(ctx)) {
         BPU_printError("Key generation error");
-
         return 1;
     }
 

@@ -47,7 +47,7 @@ int BPU_mecsPointchevalCCA2Encrypt(BPU_T_GF2_Vector *out, const BPU_T_GF2_Vector
 	BPU_gf2VecMalloc(&enc_pt, ctx->code_ctx->code_len);
 
 	// encrypt with basic MECS
-    if (BPU_mecsBasicEncrypt(enc_pt, cca2_pt, ctx)) {
+    if (BPU_mecsBasicEncrypt(enc_pt, cca2_pt, ctx,1)) {
 		return -1;
 	}
     BPU_gf2VecFree(&cca2_pt);

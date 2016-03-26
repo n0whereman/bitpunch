@@ -29,7 +29,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
 
-int BPU_gf2VecKDF(BPU_T_GF2_Vector *out, const BPU_T_GF2_Vector *pwd,const BPU_T_GF2_Vector *salt);
+int BPU_gf2VecKDF(BPU_T_GF2_Vector *out, const BPU_T_GF2_Vector *pwd,const BPU_T_GF2_Vector *salt, int keylen);
 
 #endif // BPU_CONF_KDF
 

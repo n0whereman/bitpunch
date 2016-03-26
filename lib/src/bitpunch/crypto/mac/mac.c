@@ -37,11 +37,7 @@ int BPU_gf2VecComputeHMAC(BPU_T_GF2_Vector *out, const BPU_T_GF2_Vector *in, con
   res = mbedtls_md_hmac_finish(&ctx, (unsigned char*)output);
 
   memcpy(out->elements, output, out->len / 8);
-  fprintf(stderr,"\nTLACIM MAC:\n");
-  BPU_printGf2Vec(out);
 
-  //size_t output_len = 0;
-  //mbedtls_base64_encode((unsigned char*)encoded, sizeof(encoded), &output_len, (const unsigned char*)output, 20);
   mbedtls_md_free(&ctx);
 
 	return 0;

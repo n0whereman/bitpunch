@@ -37,6 +37,10 @@ typedef enum _BPU_T_EN_Mecs_Types {
 #ifdef BPU_CONF_MECS_CCA2_KOBARA_IMAI_GOPPA
     BPU_EN_MECS_CCA2_KOBARA_IMAI_GOPPA, ///< adapted Kobara-Imai's cca2 conversion
 #endif
+//include hybrid
+#ifdef BPU_CONF_MECS_HYBRID
+    BPU_EN_MECS_HYBRID, ///< hybrid
+#endif
 #ifdef BPU_CONF_MECS_CCA2_KOBARA_IMAI_QCMDPC
     BPU_EN_MECS_CCA2_KOBARA_IMAI_QCMDPC, ///< adapted Pointcheval's cca2 conversion for qcmdpc
 #endif

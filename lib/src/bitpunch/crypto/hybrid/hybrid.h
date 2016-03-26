@@ -15,25 +15,44 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-#ifndef MECSBASIC_H
-#define MECSBASIC_H
+#ifndef HYBRID_H
+#define HYBRID_H
 
 #include <bitpunch/config.h>
+
+#if defined(BPU_CONF_MECS_HYBRID)
+
+#include <bitpunch/config.h>
+#include <bitpunch/math/gf2types.h>
 #include <bitpunch/crypto/mecsctx.h>
+#include <bitpunch/crypto/hash/sha512.h>
 
 #ifdef BPU_CONF_ENCRYPTION
 /**
- * Encrypt plaintext.
- * @param  out    cyphertext
- * @param  message  plaintext
- * @param  ctx  McEliece context
- * @return     0 - succes, else error
+ * @brief BPU_mecsPointchevalCCA2Encrypt
+ * @param out
+ * @param in
+ * @param ctx
+ * @return
  */
-int BPU_mecsBasicEncrypt(BPU_T_GF2_Vector *out, const BPU_T_GF2_Vector *in, const BPU_T_Mecs_Ctx *ctx,int change_error);
+int BPU_hybridEncrypt(BPU_T_GF2_Vector *out, const BPU_T_GF2_Vector *in, const BPU_T_Mecs_Ctx *ctx);
 #endif
 
 #ifdef BPU_CONF_DECRYPTION
-int BPU_mecsBasicDecrypt(BPU_T_GF2_Vector *out, const BPU_T_GF2_Vector *in, const BPU_T_Mecs_Ctx *ctx);
+/**
+ * @brief BPU_mecsPointchevalCCA2Decrypt
+ * @param out
+ * @param in
+ * @param ctx
+ * @return
+ */
+int BPU_hybridDecrypt(BPU_T_GF2_Vector *out, const BPU_T_GF2_Vector *in, const BPU_T_Mecs_Ctx *ctx);
 #endif
 
-#endif // MECSBASIC_H
+static const char *encsalt = "PBKDF2-SALT-CONST-ENCRYPTION";
+static const char *macsalt = "PBKDF2-SALT-CONST-MAC";
+
+
+#endif // BPU_CONF_MECS_HYBRID
+#endif // MECSPOINTCHEVAL_H
+

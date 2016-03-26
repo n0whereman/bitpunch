@@ -21,7 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <bitpunch/debugio.h>
 
 #ifdef BPU_CONF_ENCRYPTION
-int BPU_mecsBasicEncrypt(BPU_T_GF2_Vector *out, const BPU_T_GF2_Vector *in, const BPU_T_Mecs_Ctx *ctx) {
+int BPU_mecsBasicEncrypt(BPU_T_GF2_Vector *out, const BPU_T_GF2_Vector *in, const BPU_T_Mecs_Ctx *ctx,int change_error) {
 	int rc;
 	BPU_T_GF2_Vector *e = ctx->code_ctx->e;
 	BPU_gf2VecNull(out);
@@ -33,15 +33,20 @@ int BPU_mecsBasicEncrypt(BPU_T_GF2_Vector *out, const BPU_T_GF2_Vector *in, cons
 		return -1;
 	}
 
-	rc = ctx->code_ctx->_encode(out, in, ctx->code_ctx);
-	if (rc) {
+    rc = ctx->code_ctx->_encode(out, in, ctx->code_ctx);
+
+    if (rc) {
 		BPU_printError("can not encode");
 		return rc;
 	}
 
 	// generate random error vector e
-	rc += BPU_gf2VecRand(e, ctx->code_ctx->t);
-	if (rc) {
+    if(change_error != 0) {
+        //BPU_gf2VecXor(e,e);
+        rc += BPU_gf2VecRand(e, ctx->code_ctx->t);
+    }
+
+    if (rc) {
 		BPU_printError("can not init rand vector");
 		return rc;
 	}

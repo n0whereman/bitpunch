@@ -61,7 +61,8 @@ SOURCES += \
     lib/src/bitpunch/crypto/aes/aes.c \
     lib/src/bitpunch/crypto/kdf/pbkdf2.c \
     lib/src/bitpunch/scheme/hybrid/scheme.c \
-    lib/src/bitpunch/crypto/mac/mac.c
+    lib/src/bitpunch/crypto/mac/mac.c \
+    lib/src/bitpunch/crypto/hybrid/hybrid.c
 
 #include(deployment.pri)
 #qtcAddDeployment()
@@ -101,7 +102,8 @@ HEADERS += \
     lib/src/bitpunch/crypto/cca2/mecskobaraimai.h \
     lib/src/bitpunch/crypto/kdf/pbkdf2.h \
     lib/src/bitpunch/scheme/hybrid/scheme.h \
-    lib/src/bitpunch/crypto/mac/mac.h
+    lib/src/bitpunch/crypto/mac/mac.h \
+    lib/src/bitpunch/crypto/hybrid/hybrid.h
 
 OTHER_FILES += \
     lib/makefile
