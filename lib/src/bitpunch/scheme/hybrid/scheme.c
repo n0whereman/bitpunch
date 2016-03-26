@@ -31,12 +31,12 @@ int BPU_HybridMecs(const BPU_T_Mecs_Ctx *ctx1, const BPU_T_Mecs_Ctx *ctx2) {
     BPU_gf2VecMalloc(&ka,256);
     BPU_gf2VecMalloc(&mac_a,512);
     BPU_gf2VecMalloc(&mac_b,512);
-
+    // AES_CBC changes iv so backup needed
     BPU_gf2VecCopy(iv_orig,iv_dem);
-
-    //party A
+    //TODO: Set salt as protocol constant
+    //              Alice
+    /***************************************/
     BPU_gf2VecKDF(ke,ctx2->code_ctx->e, salt);
-    //TODO: should I really change the salt? be aware of padding | ako prenasat IV na AES?
     BPU_gf2VecKDF(ka,ctx2->code_ctx->e, salt);
     err += BPU_gf2VecAesEnc(ct_dem_a,pt_dem_a,ke,iv_dem);
     BPU_gf2VecComputeHMAC(mac_a,pt_dem_a, ka);
@@ -46,11 +46,9 @@ int BPU_HybridMecs(const BPU_T_Mecs_Ctx *ctx1, const BPU_T_Mecs_Ctx *ctx2) {
     fprintf(stderr, "PT to MECS: \n");
     BPU_printGf2Vec(pt_kem_pad);
 
-    fprintf(stderr, "Encryption...\n");
-    // BPU_encrypt pt
+    fprintf(stderr, "MECS encryption...\n");
     if (BPU_mecsEncrypt(ct_kem, pt_kem_pad, ctx2)) {
         BPU_printError("Encryption error");
-
         BPU_gf2VecFree(&ctx2);
         BPU_gf2VecFree(&pt_kem);
         BPU_gf2VecFree(&ct_kem);
@@ -88,6 +86,19 @@ int BPU_HybridMecs(const BPU_T_Mecs_Ctx *ctx1, const BPU_T_Mecs_Ctx *ctx2) {
     if(BPU_gf2VecCmp(pt_dem_a,pt_dem_b)){
         fprintf(stderr, "\nMessage was transferred\n");
     }
+
+    //Releasing used memory
+    BPU_gf2VecFree(&pt_dem_a);
+    BPU_gf2VecFree(&pt_dem_b);
+    BPU_gf2VecFree(&iv_orig);
+    BPU_gf2VecFree(&iv_dem);
+    BPU_gf2VecFree(&ct_dem_b);
+    BPU_gf2VecFree(&pt_kem_dec);
+    BPU_gf2VecFree(&mac_a);
+    BPU_gf2VecFree(&mac_b);
+    BPU_gf2VecFree(&ka);
+    BPU_gf2VecFree(&ke);
+
 
 	return 0;
 }
