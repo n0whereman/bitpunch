@@ -57,6 +57,7 @@ int testAesEncDec(){
     BPU_T_GF2_Vector *pt, *ct,*key,*iv,*tmp, *ivOrig;
     //Testing plaintext vector - lenght 384 bit ()
     BPU_gf2VecMalloc(&pt,256);
+    BPU_gf2VecRand(pt,3);
     //pomocny
     BPU_gf2VecMalloc(&tmp,256);
     BPU_gf2VecCopy(tmp,pt);
@@ -75,7 +76,7 @@ int testAesEncDec(){
     rc += BPU_gf2VecAesDec(pt,ct,key,iv);
 
     if (BPU_gf2VecCmp(pt,tmp) == 0)
-        fprintf(stderr, "PARADNE.\n");
+        fprintf(stderr, "CT is equal to PT.\n");
     return rc;
 }
 

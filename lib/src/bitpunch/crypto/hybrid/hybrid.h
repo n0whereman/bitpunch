@@ -27,6 +27,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <bitpunch/crypto/mecsctx.h>
 #include <bitpunch/crypto/hash/sha512.h>
 
+static const char *encsalt = "PBKDF2-SALT-CONST-ENCRYPTION";
+static const char *macsalt = "PBKDF2-SALT-CONST-MAC";
+#define BPU_MAC_LEN 256
+
 #ifdef BPU_CONF_ENCRYPTION
 /**
  * @brief BPU_mecsPointchevalCCA2Encrypt
@@ -49,8 +53,6 @@ int BPU_hybridEncrypt(BPU_T_GF2_Vector *out, const BPU_T_GF2_Vector *in, const B
 int BPU_hybridDecrypt(BPU_T_GF2_Vector *out, const BPU_T_GF2_Vector *in, const BPU_T_Mecs_Ctx *ctx);
 #endif
 
-static const char *encsalt = "PBKDF2-SALT-CONST-ENCRYPTION";
-static const char *macsalt = "PBKDF2-SALT-CONST-MAC";
 
 
 #endif // BPU_CONF_MECS_HYBRID

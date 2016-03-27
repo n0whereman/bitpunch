@@ -29,36 +29,36 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #ifdef BPU_CONF_ENCRYPTION
 int BPU_hybridEncrypt(BPU_T_GF2_Vector *out, const BPU_T_GF2_Vector *in, const BPU_T_Mecs_Ctx *ctx) {
-    BPU_T_GF2_Vector *key_enc,*key_auth,*mac_salt, *enc_salt,*ct_dem, *iv_dem,*mac,*pt_kem,*pt_kem_pad;
+    BPU_T_GF2_Vector *key_enc,*key_auth,*mac_salt, *enc_salt,*ct_dem, *iv_dem,*mac,*pt_kem,*pt_kem_pad,*tmp_out,*iv_orig;
     int err = 0;
     int pt_kem_size = 0;
     int pt_kem_pad_size = 0;
 
     //Alloc memory for mac
-    BPU_gf2VecMalloc(&mac,512);
+    BPU_gf2VecMalloc(&mac,BPU_MAC_LEN);
     //Alloc memory for IV
-    BPU_gf2VecMalloc(&iv_dem,256);
+    BPU_gf2VecMalloc(&iv_dem,128);
 
-    //TODO: CT_DEM should be divisible by 16, otherwise padding
-    BPU_gf2VecMalloc(&ct_dem,976);
+    //TODO: CT_DEM should be divisible by 16, otherwise padding || 976
+    BPU_gf2VecMalloc(&ct_dem,in->len);
 
     //Alloc memory for keys
-    BPU_gf2VecMalloc(&key_enc,256);
-    BPU_gf2VecMalloc(&key_auth,256);
+    BPU_gf2VecMalloc(&key_enc,BPU_MAC_LEN);
+    BPU_gf2VecMalloc(&key_auth,BPU_MAC_LEN);
 
     //Must be defined as protocol constant
-    BPU_gf2VecMalloc(&enc_salt,512);
-    BPU_gf2VecMalloc(&mac_salt,512);
+    BPU_gf2VecMalloc(&enc_salt,BPU_MAC_LEN);
+    BPU_gf2VecMalloc(&mac_salt,BPU_MAC_LEN);
     BPU_gf2ArraytoVector(enc_salt,encsalt);
     BPU_gf2ArraytoVector(mac_salt,macsalt);
 
     //Compute keys for enc and mac
-    BPU_gf2VecKDF(key_enc,ctx->code_ctx->e, enc_salt, 256);
-    BPU_gf2VecKDF(key_auth,ctx->code_ctx->e, mac_salt,256);
+    BPU_gf2VecKDF(key_enc,ctx->code_ctx->e, enc_salt, BPU_MAC_LEN);
+    BPU_gf2VecKDF(key_auth,ctx->code_ctx->e, mac_salt,BPU_MAC_LEN);
 
     //DEM encryption
     err += BPU_gf2VecAesEnc(ct_dem,in,key_enc,iv_dem);
-    BPU_printGf2Vec(ct_dem);
+
     //MAC computation
     BPU_gf2VecComputeHMAC(mac,ct_dem, key_auth);
 
@@ -95,16 +95,15 @@ int BPU_hybridEncrypt(BPU_T_GF2_Vector *out, const BPU_T_GF2_Vector *in, const B
 #ifdef BPU_CONF_DECRYPTION
 int BPU_hybridDecrypt(BPU_T_GF2_Vector *out, const BPU_T_GF2_Vector *in, const BPU_T_Mecs_Ctx *ctx) {
     int err = 0;
-    BPU_T_GF2_Vector *pt_kem_dec_pad,*pt_kem_dec,*enc_salt,*mac_salt,*mac_a,*mac_b,*key_enc,*key_auth,*ct_dem, *iv_dem;
+    BPU_T_GF2_Vector *pt_kem_dec_pad,*pt_kem_dec,*enc_salt,*mac_salt,*mac_a,*mac_b,*key_enc,*key_auth,*ct_dem, *iv_dem, *tmp_out;
     //Alloc memory for decrypted MECS, TODO: nerobim to natrvdo
     BPU_gf2VecMalloc(&pt_kem_dec_pad, 1498);
-    BPU_gf2VecMalloc(&pt_kem_dec, 1488);
-    BPU_gf2VecMalloc(&ct_dem, 976);
-    BPU_gf2VecMalloc(&iv_dem,256);
+    BPU_gf2VecMalloc(&pt_kem_dec, 1498);
+    BPU_gf2VecMalloc(&iv_dem,128);
 
-    //Allocation of memory for macs
-    BPU_gf2VecMalloc(&mac_a, 512);
-    BPU_gf2VecMalloc(&mac_b, 512);
+    //Allocation of memory for macs SHA256
+    BPU_gf2VecMalloc(&mac_a, BPU_MAC_LEN);
+    BPU_gf2VecMalloc(&mac_b, BPU_MAC_LEN);
 
     fprintf(stderr, "MECS decryption...\n");
      if (BPU_mecsBasicDecrypt(pt_kem_dec_pad, in, ctx)) {
@@ -115,35 +114,36 @@ int BPU_hybridDecrypt(BPU_T_GF2_Vector *out, const BPU_T_GF2_Vector *in, const B
      }
 
      //Remove padding
-    BPU_padDel(pt_kem_dec,pt_kem_dec_pad);
+     BPU_padDel(pt_kem_dec,pt_kem_dec_pad);
 
     //Alloc memory for keys
-    BPU_gf2VecMalloc(&key_enc,256);
-    BPU_gf2VecMalloc(&key_auth,256);
+    BPU_gf2VecMalloc(&key_enc,BPU_MAC_LEN);
+    BPU_gf2VecMalloc(&key_auth,BPU_MAC_LEN);
 
     //Must be defined as protocol constant
-    BPU_gf2VecMalloc(&enc_salt,512);
-    BPU_gf2VecMalloc(&mac_salt,512);
+    BPU_gf2VecMalloc(&enc_salt,BPU_MAC_LEN);
+    BPU_gf2VecMalloc(&mac_salt,BPU_MAC_LEN);
     BPU_gf2ArraytoVector(enc_salt,encsalt);
     BPU_gf2ArraytoVector(mac_salt,macsalt);
 
     //Compute keys for enc and mac
-    BPU_gf2VecKDF(key_enc,ctx->code_ctx->e, enc_salt, 256);
-    BPU_gf2VecKDF(key_auth,ctx->code_ctx->e, mac_salt,256);
+    BPU_gf2VecKDF(key_enc,ctx->code_ctx->e, enc_salt, BPU_MAC_LEN);
+    BPU_gf2VecKDF(key_auth,ctx->code_ctx->e, mac_salt,BPU_MAC_LEN);
 
     //TODO: zas to nerezat natvrdo
-     BPU_gf2VecCrop(ct_dem,pt_kem_dec,0,976);
-     BPU_gf2VecCrop(mac_a,pt_kem_dec,976,512);
+     BPU_gf2VecMalloc(&ct_dem,pt_kem_dec->len - BPU_MAC_LEN);
+     BPU_gf2VecCrop(ct_dem,pt_kem_dec,0,pt_kem_dec->len - BPU_MAC_LEN);
+     BPU_gf2VecCrop(mac_a,pt_kem_dec,pt_kem_dec->len - BPU_MAC_LEN,BPU_MAC_LEN);
 
      BPU_gf2VecComputeHMAC(mac_b,ct_dem, key_auth);
 
      if(BPU_gf2VecCmp(mac_a,mac_b) == 0){
-         fprintf(stderr, "\nMACs matches\n");
+         fprintf(stderr, "\nMACs are equal\n");
      }
-    BPU_printGf2Vec(ct_dem);
-     err += BPU_gf2VecAesDec(out,ct_dem,key_enc,iv_dem);
+    //DEM decryption
+    err += BPU_gf2VecAesDec(out,ct_dem,key_enc,iv_dem);
 
-	return 0;
+    return 0;
 }
 
 #endif // BPU_CONF_DECRYPTION

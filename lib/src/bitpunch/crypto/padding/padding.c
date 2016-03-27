@@ -75,5 +75,5 @@ int BPU_padDel(BPU_T_GF2_Vector *message, const BPU_T_GF2_Vector *padded_message
 	for (i = (padded_message->elements_in_row - 1) * padded_message->element_bit_size; i < message->len; i++){
 		BPU_gf2VecSetBit(message, i, BPU_gf2VecGetBit(padded_message, i));
 	}
-	return 0;
+    return 0;
 }

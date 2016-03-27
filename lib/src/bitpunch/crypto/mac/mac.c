@@ -27,10 +27,10 @@ int BPU_gf2VecComputeHMAC(BPU_T_GF2_Vector *out, const BPU_T_GF2_Vector *in, con
 	int res = 0;
 
   mbedtls_md_context_t ctx= {};
-  const mbedtls_md_info_t * sha512_md = mbedtls_md_info_from_type(MBEDTLS_MD_SHA512);
-  mbedtls_md_init_ctx(&ctx, sha512_md);
-  char output[64] = {};
-  //char encoded[512] = {};
+  const mbedtls_md_info_t * sha256_md = mbedtls_md_info_from_type(MBEDTLS_MD_SHA256);
+  mbedtls_md_init_ctx(&ctx, sha256_md);
+  char output[32] = {};
+  //char encoded[256] = {};
   
   res = mbedtls_md_hmac_starts(&ctx, (const unsigned char*) key->elements, key->len / 8);
   res = mbedtls_md_hmac_update(&ctx, (const unsigned char*)in->elements, in->len / 8);

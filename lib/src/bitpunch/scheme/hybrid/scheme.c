@@ -8,20 +8,20 @@
 
 int BPU_HybridMecs(const BPU_T_Mecs_Ctx *ctx1, const BPU_T_Mecs_Ctx *ctx2) {
     int err;
-    //MECS can process up to 64 bytes
     BPU_T_GF2_Vector *pt_dem_a,*pt_dem_b, *ct_kem;
     BPU_gf2VecMalloc(&ct_kem,3072);
-    BPU_gf2VecMalloc(&pt_dem_a,976);
-    BPU_gf2VecMalloc(&pt_dem_b,976);
+    BPU_gf2VecMalloc(&pt_dem_a,1152);
+    BPU_gf2VecRand(pt_dem_a,20);
+    BPU_gf2VecMalloc(&pt_dem_b,1152);
 
+    BPU_printGf2Vec(pt_dem_a);
     //              Alice
     /***************************************/
     BPU_hybridEncrypt(ct_kem,pt_dem_a, ctx1);
-    //BPU_printGf2Vec(pt_dem_a);
+
     //              Bob
     /***************************************/
     BPU_hybridDecrypt(pt_dem_b,ct_kem, ctx1);
-    //BPU_printGf2Vec(pt_dem_b);
 
     if(BPU_gf2VecCmp(pt_dem_a,pt_dem_b) == 0){
         fprintf(stderr, "\nMessage was transferred\n");
