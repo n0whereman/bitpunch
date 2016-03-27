@@ -29,6 +29,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 static const char *encsalt = "PBKDF2-SALT-CONST-ENCRYPTION";
 static const char *macsalt = "PBKDF2-SALT-CONST-MAC";
+static const char *ivsalt = "AES-IV";
 #define BPU_MAC_LEN 256
 
 #ifdef BPU_CONF_ENCRYPTION

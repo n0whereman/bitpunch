@@ -29,7 +29,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #ifdef BPU_CONF_ENCRYPTION
 int BPU_hybridEncrypt(BPU_T_GF2_Vector *out, const BPU_T_GF2_Vector *in, const BPU_T_Mecs_Ctx *ctx) {
-    BPU_T_GF2_Vector *key_enc,*key_auth,*mac_salt, *enc_salt,*ct_dem, *iv_dem,*mac,*pt_kem,*pt_kem_pad,*tmp_out,*iv_orig;
+    BPU_T_GF2_Vector *key_enc,*key_auth,*mac_salt, *enc_salt,*ct_dem, *iv_dem,*mac,*pt_kem,*pt_kem_pad,*tmp_out,*iv_salt;
     int err = 0;
     int pt_kem_size = 0;
     int pt_kem_pad_size = 0;
@@ -49,12 +49,15 @@ int BPU_hybridEncrypt(BPU_T_GF2_Vector *out, const BPU_T_GF2_Vector *in, const B
     //Must be defined as protocol constant
     BPU_gf2VecMalloc(&enc_salt,BPU_MAC_LEN);
     BPU_gf2VecMalloc(&mac_salt,BPU_MAC_LEN);
+    BPU_gf2VecMalloc(&iv_salt,BPU_MAC_LEN);
     BPU_gf2ArraytoVector(enc_salt,encsalt);
     BPU_gf2ArraytoVector(mac_salt,macsalt);
+    BPU_gf2ArraytoVector(iv_salt,ivsalt);
 
     //Compute keys for enc and mac
     BPU_gf2VecKDF(key_enc,ctx->code_ctx->e, enc_salt, BPU_MAC_LEN);
     BPU_gf2VecKDF(key_auth,ctx->code_ctx->e, mac_salt,BPU_MAC_LEN);
+    BPU_gf2VecKDF(iv_dem,ctx->code_ctx->e, iv_salt, BPU_MAC_LEN / 2);
 
     //DEM encryption
     err += BPU_gf2VecAesEnc(ct_dem,in,key_enc,iv_dem);
@@ -95,7 +98,7 @@ int BPU_hybridEncrypt(BPU_T_GF2_Vector *out, const BPU_T_GF2_Vector *in, const B
 #ifdef BPU_CONF_DECRYPTION
 int BPU_hybridDecrypt(BPU_T_GF2_Vector *out, const BPU_T_GF2_Vector *in, const BPU_T_Mecs_Ctx *ctx) {
     int err = 0;
-    BPU_T_GF2_Vector *pt_kem_dec_pad,*pt_kem_dec,*enc_salt,*mac_salt,*mac_a,*mac_b,*key_enc,*key_auth,*ct_dem, *iv_dem, *tmp_out;
+    BPU_T_GF2_Vector *pt_kem_dec_pad,*pt_kem_dec,*enc_salt,*mac_salt,*mac_a,*mac_b,*key_enc,*key_auth,*ct_dem, *iv_dem, *iv_salt;
     //Alloc memory for decrypted MECS, TODO: nerobim to natrvdo
     BPU_gf2VecMalloc(&pt_kem_dec_pad, 1498);
     BPU_gf2VecMalloc(&pt_kem_dec, 1498);
@@ -123,12 +126,15 @@ int BPU_hybridDecrypt(BPU_T_GF2_Vector *out, const BPU_T_GF2_Vector *in, const B
     //Must be defined as protocol constant
     BPU_gf2VecMalloc(&enc_salt,BPU_MAC_LEN);
     BPU_gf2VecMalloc(&mac_salt,BPU_MAC_LEN);
+    BPU_gf2VecMalloc(&iv_salt,BPU_MAC_LEN);
     BPU_gf2ArraytoVector(enc_salt,encsalt);
     BPU_gf2ArraytoVector(mac_salt,macsalt);
+    BPU_gf2ArraytoVector(iv_salt,ivsalt);
 
     //Compute keys for enc and mac
     BPU_gf2VecKDF(key_enc,ctx->code_ctx->e, enc_salt, BPU_MAC_LEN);
-    BPU_gf2VecKDF(key_auth,ctx->code_ctx->e, mac_salt,BPU_MAC_LEN);
+    BPU_gf2VecKDF(key_auth,ctx->code_ctx->e, mac_salt, BPU_MAC_LEN);
+    BPU_gf2VecKDF(iv_dem,ctx->code_ctx->e, iv_salt, BPU_MAC_LEN / 2);
 
     //TODO: zas to nerezat natvrdo
      BPU_gf2VecMalloc(&ct_dem,pt_kem_dec->len - BPU_MAC_LEN);
