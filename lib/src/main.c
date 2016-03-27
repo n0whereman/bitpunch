@@ -28,6 +28,7 @@
 #include <bitpunch/crypto/kdf/pbkdf2.h>
 #include <bitpunch/crypto/mac/mac.h>
 #include <bitpunch/scheme/hybrid/scheme.h>
+#include <bitpunch/scheme/exchange/scheme.h>
 
 int testKDF(){
     BPU_T_GF2_Vector *extended_pwd, *pwd, *salt;
@@ -119,6 +120,59 @@ int testHybridMecs(){
 
     if(BPU_HybridMecs(ctx,ctx_2)){
         BPU_printError("Hybrid scheme error");
+        BPU_mecsFreeCtx(&ctx);
+        BPU_mecsFreeCtx(&ctx_2);
+        BPU_mecsFreeParamsGoppa(&params);
+    return 1;
+    }
+
+    BPU_mecsFreeCtx(&ctx);
+    BPU_mecsFreeCtx(&ctx_2);
+    BPU_mecsFreeParamsGoppa(&params);
+
+    return rc;
+}
+
+
+int testKeyExchange(){
+    int rc = 0;
+    // MUST BE NULL
+    BPU_T_Mecs_Ctx *ctx = NULL;
+    BPU_T_Mecs_Ctx *ctx_2 = NULL;
+    BPU_T_UN_Mecs_Params params;
+
+    /***************************************/
+    // mce initialisation t = 50, m = 11
+    fprintf(stderr, "Basic GOPPA Initialisation...\n");
+    if (BPU_mecsInitParamsGoppa(&params, 11, 50, 0)) {
+        return 1;
+    }
+
+    if (BPU_mecsInitCtx(&ctx, &params, BPU_EN_MECS_BASIC_GOPPA)) {
+        return 1;
+    }
+    /***************************************/
+    fprintf(stderr, "Key generation...\n");
+    // key pair generation
+    if (BPU_mecsGenKeyPair(ctx)) {
+        BPU_printError("Key generation error");
+        return 1;
+    }
+
+    if (BPU_mecsInitCtx(&ctx_2, &params, BPU_EN_MECS_BASIC_GOPPA)) {
+        return 1;
+    }
+    /***************************************/
+    fprintf(stderr, "Key generation...\n");
+    // key pair generation
+    if (BPU_mecsGenKeyPair(ctx_2)) {
+        BPU_printError("Key generation error");
+
+        return 1;
+    }
+
+    if(BPU_KeyExchangeMecs(ctx,ctx_2)){
+        BPU_printError("Exchange scheme error");
         BPU_mecsFreeCtx(&ctx);
         BPU_mecsFreeCtx(&ctx_2);
         BPU_mecsFreeParamsGoppa(&params);
@@ -430,6 +484,10 @@ int main(int argc, char **argv) {
      rc += testMAC();
      rc += testHybridMecs();
  #endif
+
+#ifdef BPU_CONF_MECS_EXCHANGE
+    rc += testKeyExchange();
+#endif
 
 	return rc;
 }

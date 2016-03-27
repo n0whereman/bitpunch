@@ -26,6 +26,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     #ifndef BPU_CONF_MECS_HYBRID
         #define BPU_CONF_MECS_HYBRID
     #endif
+    #ifndef BPU_CONF_MECS_EXCHANGE
+        #define BPU_CONF_MECS_EXCHANGE
+    #endif
     #ifndef BPU_CONF_MECS_CCA2_POINTCHEVAL_GOPPA
         #define BPU_CONF_MECS_CCA2_POINTCHEVAL_GOPPA
     #endif
