@@ -14,7 +14,7 @@ int BPU_HybridMecs(const BPU_T_Mecs_Ctx *ctx1, const BPU_T_Mecs_Ctx *ctx2) {
     BPU_gf2VecRand(pt_dem_a,20);
     BPU_gf2VecMalloc(&pt_dem_b,1152);
 
-    BPU_printGf2Vec(pt_dem_a);
+   // BPU_printGf2Vec(pt_dem_a);
     //              Alice
     /***************************************/
     BPU_hybridEncrypt(ct_kem,pt_dem_a, ctx1);
