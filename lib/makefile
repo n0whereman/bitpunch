@@ -65,7 +65,7 @@ SHARED_TARGET = $(DIST_DIR)/shared
 # test target
 TEST_DIR = $(DIST_DIR)/test
 
-C_FILES = $(shell find src/bitpunch/ -type f -name '*.c')
+C_FILES = $(shell find src/ -type f -name '*.c')
 
 OBJS := $(patsubst %.c, %.c.o, $(C_FILES))
 
@@ -134,7 +134,7 @@ clean: clean-obj
 	rm -vRf $(BUILD_DIR)/
 
 clean-obj:
-	find src/bitpunch/ -type f -name '*.o' -exec rm -v {} \;
+	find src/ -type f -name '*.o' -exec rm -v {} \;
 	find src/bitpunch/ -type f -name '*.pic' -exec rm -v {} \;
 	find src/bitpunch/ -type f -name '*.gch' -exec rm -v {} \;
 

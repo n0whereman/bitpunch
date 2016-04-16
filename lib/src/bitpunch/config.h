@@ -54,6 +54,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     #ifndef BPU_CONF_MAC
         #define BPU_CONF_MAC
     #endif
+    #ifndef BPU_CONF_BOX
+       #define BPU_CONF_BOX
+    #endif
 	#ifndef BPU_CONF_FULL_MECS
 		#define BPU_CONF_FULL_MECS
 	#endif
@@ -89,6 +92,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     #endif
     #ifndef BPU_CONF_MAC
        #define BPU_CONF_MAC
+    #endif
+    #ifndef BPU_CONF_BOX
+      #define BPU_CONF_BOX
     #endif
 #endif
 

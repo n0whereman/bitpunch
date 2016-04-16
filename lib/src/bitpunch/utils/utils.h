@@ -25,6 +25,6 @@
 #include <stdint.h>
 #include <bitpunch/math/gf2.h>
 
-int BPU_bytesToGf2vector(BPU_T_GF2_Vector *out, )
+//int BPU_bytesToGf2vector(BPU_T_GF2_Vector **out, const uint8_t *in, const uint32_t size);
 
 #endif // utils.h

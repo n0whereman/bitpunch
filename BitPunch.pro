@@ -64,7 +64,13 @@ SOURCES += \
     lib/src/bitpunch/crypto/mac/mac.c \
     lib/src/bitpunch/crypto/hybrid/hybrid.c \
     lib/src/bitpunch/scheme/exchange/scheme.c \
-    lib/src/bitpunch/utils/utils.c
+    lib/src/bitpunch/utils/utils.c \
+    lib/src/box/hybrid/hybrid.c \
+    lib/src/box/utils/symmetric_cipher/aes.c \
+    lib/src/box/test_scheme.c \
+    lib/src/box/utils/kdf/pbkdf2.c \
+    lib/src/box/utils/mac/mac.c \
+    lib/src/box/box.c
 
 #include(deployment.pri)
 #qtcAddDeployment()
@@ -107,7 +113,14 @@ HEADERS += \
     lib/src/bitpunch/crypto/mac/mac.h \
     lib/src/bitpunch/crypto/hybrid/hybrid.h \
     lib/src/bitpunch/scheme/exchange/scheme.h \
-    lib/src/bitpunch/utils/utils.h
+    lib/src/bitpunch/utils/utils.h \
+    lib/src/box/hybrid/hybrid.h \
+    lib/src/box/utils/symmetric_cipher/aes.h \
+    lib/src/box/test_scheme.h \
+    lib/src/box/hybrid/box.h \
+    lib/src/box/utils/kdf/pbkdf2.h \
+    lib/src/box/utils/mac/mac.h \
+    lib/src/box/box.h
 
 OTHER_FILES += \
     lib/makefile

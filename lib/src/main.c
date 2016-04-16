@@ -16,19 +16,13 @@
  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 #include <bitpunch/bitpunch.h>
+#include <box/box.h>
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
 #include <sys/time.h>
 
-#include <bitpunch/crypto/hash/sha512.h>
-#include <bitpunch/asn1/asn1.h>
-#include <bitpunch/crypto/aes/aes.h>
-#include <bitpunch/crypto/kdf/pbkdf2.h>
-#include <bitpunch/crypto/mac/mac.h>
-#include <bitpunch/scheme/hybrid/scheme.h>
-#include <bitpunch/scheme/exchange/scheme.h>
 
 int testKDF(){
     BPU_T_GF2_Vector *extended_pwd, *pwd, *salt;
@@ -81,12 +75,14 @@ int testAesEncDec(){
     return rc;
 }
 
-int testHybridMecs(){
+int testCryptoBox(){
     int rc = 0;
-    // MUST BE NULL
-    BPU_T_Mecs_Ctx *ctx = NULL;
-    BPU_T_Mecs_Ctx *ctx_2 = NULL;
     BPU_T_UN_Mecs_Params params;
+    BPU_T_GF2_Vector *pt_dem_a,*pt_dem_b, *ct_kem;
+       BPU_gf2VecMalloc(&ct_kem,3072);
+       BPU_gf2VecMalloc(&pt_dem_a,1152);
+       BPU_gf2VecRand(pt_dem_a,20);
+       BPU_gf2VecMalloc(&pt_dem_b,1152);
 
     /***************************************/
     // mce initialisation t = 50, m = 11
@@ -94,7 +90,7 @@ int testHybridMecs(){
     if (BPU_mecsInitParamsGoppa(&params, 11, 50, 0)) {
         return 1;
     }
-
+    BPU_T_Mecs_Ctx *ctx = NULL;
     if (BPU_mecsInitCtx(&ctx, &params, BPU_EN_MECS_BASIC_GOPPA)) {
         return 1;
     }
@@ -106,28 +102,31 @@ int testHybridMecs(){
         return 1;
     }
 
-    if (BPU_mecsInitCtx(&ctx_2, &params, BPU_EN_MECS_BASIC_GOPPA)) {
-        return 1;
-    }
-    /***************************************/
-    fprintf(stderr, "Key generation...\n");
-    // key pair generation
-    if (BPU_mecsGenKeyPair(ctx_2)) {
-        BPU_printError("Key generation error");
-
-        return 1;
-    }
-
-    if(BPU_HybridMecs(ctx,ctx_2)){
+    BPU_printError("Calling cryptobox...\n");
+    if(BPU_cryptobox_send(ct_kem,pt_dem_a, ctx)){
         BPU_printError("Hybrid scheme error");
         BPU_mecsFreeCtx(&ctx);
-        BPU_mecsFreeCtx(&ctx_2);
         BPU_mecsFreeParamsGoppa(&params);
     return 1;
     }
 
+    if(BPU_cryptobox_recieve(pt_dem_b,ct_kem, ctx)){
+        BPU_printError("Hybrid scheme error");
+        BPU_mecsFreeCtx(&ctx);
+        BPU_mecsFreeParamsGoppa(&params);
+    return 1;
+    }
+
+    if(BPU_gf2VecCmp(pt_dem_a,pt_dem_b) == 0){
+           fprintf(stderr, "\nMessage was transferred\n");
+       }
+
+       //Releasing used memory
+       BPU_gf2VecFree(&ct_kem);
+       BPU_gf2VecFree(&pt_dem_b);
+       BPU_gf2VecFree(&pt_dem_a);
+
     BPU_mecsFreeCtx(&ctx);
-    BPU_mecsFreeCtx(&ctx_2);
     BPU_mecsFreeParamsGoppa(&params);
 
     return rc;
@@ -482,12 +481,12 @@ int main(int argc, char **argv) {
      rc += testAesEncDec();
      rc += testKDF();
      rc += testMAC();
-     rc += testHybridMecs();
+     rc += testCryptoBox();
  #endif
 
-#ifdef BPU_CONF_MECS_EXCHANGE
-    rc += testKeyExchange();
-#endif
+//#ifdef BPU_CONF_MECS_EXCHANGE
+//    rc += testKeyExchange();
+//#endif
 
 	return rc;
 }
