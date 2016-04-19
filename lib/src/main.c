@@ -80,9 +80,8 @@ int testCryptoBox(){
     BPU_T_UN_Mecs_Params params;
     BPU_T_GF2_Vector *pt_dem_a,*pt_dem_b, *ct_kem;
        BPU_gf2VecMalloc(&ct_kem,3072);
-       BPU_gf2VecMalloc(&pt_dem_a,1152);
+       BPU_gf2VecMalloc(&pt_dem_a,1150);
        BPU_gf2VecRand(pt_dem_a,20);
-       BPU_gf2VecMalloc(&pt_dem_b,1152);
 
     /***************************************/
     // mce initialisation t = 50, m = 11
@@ -110,21 +109,18 @@ int testCryptoBox(){
     return 1;
     }
 
-    if(BPU_cryptobox_recieve(pt_dem_b,ct_kem, ctx)){
+    if(BPU_cryptobox_recieve(pt_dem_a,ct_kem, ctx)){
         BPU_printError("Hybrid scheme error");
         BPU_mecsFreeCtx(&ctx);
         BPU_mecsFreeParamsGoppa(&params);
     return 1;
     }
 
-    if(BPU_gf2VecCmp(pt_dem_a,pt_dem_b) == 0){
-           fprintf(stderr, "\nMessage was transferred\n");
-       }
 
-       //Releasing used memory
-       BPU_gf2VecFree(&ct_kem);
-       BPU_gf2VecFree(&pt_dem_b);
-       BPU_gf2VecFree(&pt_dem_a);
+    //Releasing used memory
+    BPU_gf2VecFree(&ct_kem);
+    BPU_gf2VecFree(&pt_dem_b);
+    BPU_gf2VecFree(&pt_dem_a);
 
     BPU_mecsFreeCtx(&ctx);
     BPU_mecsFreeParamsGoppa(&params);

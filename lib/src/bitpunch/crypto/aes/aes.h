@@ -19,7 +19,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define AES_H
 
 #include <bitpunch/config.h>
-#include <mbedtls/aes.h>
+//#include <mbedtls/aes.h>
+//#include <mbedtls/gcm.h>
+
 
 #ifdef BPU_CONF_AES
 #include <stdint.h>
@@ -28,9 +30,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <bitpunch/math/gf2types.h>
 
-int BPU_gf2VecAesEnc(BPU_T_GF2_Vector *out,const BPU_T_GF2_Vector *in, BPU_T_GF2_Vector *key,  BPU_T_GF2_Vector *iv);
+int BPU_gf2VecAesEncandTag(BPU_T_GF2_Vector *out,const BPU_T_GF2_Vector *in, BPU_T_GF2_Vector *tag, BPU_T_GF2_Vector *key,  BPU_T_GF2_Vector *iv);
 
-int BPU_gf2VecAesDec(BPU_T_GF2_Vector *out,const BPU_T_GF2_Vector *in, BPU_T_GF2_Vector *key,  BPU_T_GF2_Vector *iv);
+int BPU_gf2VecAesDecandTag(BPU_T_GF2_Vector *out,const BPU_T_GF2_Vector *in, BPU_T_GF2_Vector *tag, BPU_T_GF2_Vector *key,  BPU_T_GF2_Vector *iv);
 
 #endif // BPU_CONF_AES
 
