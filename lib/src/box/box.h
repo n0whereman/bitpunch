@@ -28,6 +28,7 @@ static const char *encsalt = "PBKDF2-SALT-CONST-ENCRYPTION";
 static const char *macsalt = "PBKDF2-SALT-CONST-MAC";
 static const char *ivsalt = "AES-IV";
 #define BPU_MAC_LEN 256
+#define AES_SIZE 128
 
 int BPU_cryptobox_send(BPU_T_GF2_Vector *out,BPU_T_GF2_Vector *in, const BPU_T_Mecs_Ctx *ctx2);
 
