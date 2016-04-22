@@ -77,10 +77,12 @@ int testAesEncDec(){
 
 int testCryptoBox(){
     int rc = 0;
+    char *pk = NULL;
+    int *size = NULL;
     BPU_T_UN_Mecs_Params params;
     BPU_T_GF2_Vector *pt_dem_a,*pt_dem_b, *ct_kem;
        BPU_gf2VecMalloc(&ct_kem,3072);
-       BPU_gf2VecMalloc(&pt_dem_a,1921);
+       BPU_gf2VecMalloc(&pt_dem_a,1920);
        BPU_gf2VecRand(pt_dem_a,20);
 
     /***************************************/
@@ -101,8 +103,13 @@ int testCryptoBox(){
         return 1;
     }
 
+    //Encoding pub key
+    if (BPU_asn1EncodePubKey(&pk, &size, ctx)) {
+            return -1;
+    }
+
     BPU_printError("Calling cryptobox...\n");
-    if(BPU_cryptobox_send(ct_kem,pt_dem_a, ctx)){
+    if(BPU_cryptobox_send(ct_kem,pt_dem_a, pk,size)){
         BPU_printError("Hybrid scheme error");
         BPU_mecsFreeCtx(&ctx);
         BPU_mecsFreeParamsGoppa(&params);
@@ -132,13 +139,18 @@ int testKeyExchange(){
     // MUST BE NULL
     BPU_T_Mecs_Ctx *ctx_A = NULL;
     BPU_T_Mecs_Ctx *ctx_B = NULL;
+    BPU_T_Mecs_Ctx *ctx_C = NULL;
     BPU_T_Mecs_Ctx *ctx_E = NULL;
     BPU_T_UN_Mecs_Params params;
-    BPU_T_GF2_Vector *r1,*pub_vec, *m1, *ct_kem, *m1_rec;
+    BPU_T_GF2_Vector *r1,*pub_vec, *s1,*s2, *ct_kem, *m1_rec,*r2,*r3,*pub_vec2,*pke;
     char *buffer = NULL;
     int size;
 
     BPU_gf2VecMalloc(&r1,128);
+    BPU_gf2VecMalloc(&r2,128);
+    BPU_gf2VecMalloc(&r3,128);
+
+    //A generates r1
     BPU_gf2VecRand(r1,20);
 
 
@@ -193,20 +205,18 @@ int testKeyExchange(){
     BPU_gf2ArraytoVector(pub_vec,buffer);
 
     //Allocate memory for m1
-    BPU_gf2VecMalloc(&m1,pub_vec->len + r1->len);
-
-    BPU_gf2VecConcat(m1,r1, pub_vec);
+    BPU_gf2VecMalloc(&s1,pub_vec->len + r1->len);
+    BPU_gf2VecConcat(s1,r1, pub_vec);
 
     //A sends m1 to B
-    if(BPU_cryptobox_send(ct_kem,m1, ctx_B)){
+    /*if(BPU_cryptobox_send(ct_kem,s1, ctx_B)){
         BPU_printError("Hybrid scheme error");
         BPU_mecsFreeCtx(&ctx_B);
         BPU_mecsFreeParamsGoppa(&params);
     return 1;
     }
-    BPU_printError("M1 has been sent\n");
 
-    BPU_gf2VecMalloc(&m1_rec,m1->len);
+    BPU_gf2VecMalloc(&m1_rec,s1->len);
     //B recieves m1
     if(BPU_cryptobox_recieve(m1_rec,ct_kem, ctx_B)){
          BPU_printError("Hybrid scheme error");
@@ -214,14 +224,22 @@ int testKeyExchange(){
          BPU_mecsFreeParamsGoppa(&params);
      return 1;
      }
-    BPU_printError("M1 has been recieved\n");
-    BPU_printError("m1_rec:");
-    BPU_printGf2Vec(m1_rec);
+
+    BPU_gf2VecMalloc(&pke,m1_rec - AES_SIZE);
+    //B crops PKE
+    BPU_gf2VecCrop(pke,m1_rec,AES_SIZE,m1_rec->len - AES_SIZE);
+    //B generates r2 and r3
+    BPU_gf2VecRand(r2,20);
+    BPU_gf2VecRand(r3,20);
+
+    //B decodes pub_key
+    BPU_asn1DecodePubKey(&ctx_C,buffer,size);
+    BPU_printError("PKE has been set\n");
 
 
     BPU_mecsFreeCtx(&ctx_A);
     BPU_mecsFreeCtx(&ctx_B);
-    BPU_mecsFreeParamsGoppa(&params);
+    BPU_mecsFreeParamsGoppa(&params);*/
 
     return rc;
 }

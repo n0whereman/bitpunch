@@ -13,7 +13,7 @@
 #include <bitpunch/crypto/mac/mac.h>
 #include <bitpunch/crypto/padding/padding.h>
 
-int BPU_cryptobox_send(BPU_T_GF2_Vector *out, BPU_T_GF2_Vector *in, const BPU_T_Mecs_Ctx *ctx) {
+int BPU_cryptobox_send(BPU_T_GF2_Vector *out, BPU_T_GF2_Vector *in, const char *pk, int size) {
         BPU_T_GF2_Vector *key_enc,*mecs_out,*rest,*mecs_block,*tag,*mac_salt, *enc_salt,*ct_dem, *iv_dem,*mac,*pt_kem,*pt_kem_pad,*iv_salt, *ct_dem_pad,*in_pad;
         int err = 0;
         int pad_len = 0;
@@ -22,6 +22,10 @@ int BPU_cryptobox_send(BPU_T_GF2_Vector *out, BPU_T_GF2_Vector *in, const BPU_T_
         int aes_blocks_num = 0;
         int aes_blocks_bit = 0;
         int pt_kem_pad_size = 0;
+
+        //Set PK to context
+        BPU_T_Mecs_Ctx *ctx = NULL;
+        BPU_asn1DecodePubKey(&ctx,pk,size);
 
         //Allocate memory for mecs output
         BPU_gf2VecMalloc(&mecs_out,ctx->ct_len);

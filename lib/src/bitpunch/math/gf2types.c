@@ -103,6 +103,15 @@ int BPU_gf2ArraytoVector(BPU_T_GF2_Vector *v, char *s){
     return 0;
 }
 
+int BPU_gf2VectortoArray(BPU_T_GF2_Vector *v, char *s){
+    if(v->len > strlen(s) + 1) {
+        BPU_printError("allocation error");
+        return -1;
+    }
+    memcpy(s,v->elements,strlen(s)+1);
+    return 0;
+}
+
 int BPU_gf2VecMalloc(BPU_T_GF2_Vector **v, int len) {
     *v = (BPU_T_GF2_Vector *) calloc(sizeof(BPU_T_GF2_Vector), 1);
 
