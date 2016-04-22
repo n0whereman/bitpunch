@@ -80,7 +80,7 @@ int testCryptoBox(){
     BPU_T_UN_Mecs_Params params;
     BPU_T_GF2_Vector *pt_dem_a,*pt_dem_b, *ct_kem;
        BPU_gf2VecMalloc(&ct_kem,3072);
-       BPU_gf2VecMalloc(&pt_dem_a,1920);
+       BPU_gf2VecMalloc(&pt_dem_a,1921);
        BPU_gf2VecRand(pt_dem_a,20);
 
     /***************************************/
@@ -120,8 +120,8 @@ int testCryptoBox(){
     BPU_gf2VecFree(&ct_kem);
     BPU_gf2VecFree(&pt_dem_a);
 
-   // BPU_mecsFreeCtx(&ctx);
-   // BPU_mecsFreeParamsGoppa(&params);
+    BPU_mecsFreeCtx(&ctx);
+    BPU_mecsFreeParamsGoppa(&params);
 
     return rc;
 }
@@ -130,9 +130,17 @@ int testCryptoBox(){
 int testKeyExchange(){
     int rc = 0;
     // MUST BE NULL
-    BPU_T_Mecs_Ctx *ctx = NULL;
-    BPU_T_Mecs_Ctx *ctx_2 = NULL;
+    BPU_T_Mecs_Ctx *ctx_A = NULL;
+    BPU_T_Mecs_Ctx *ctx_B = NULL;
+    BPU_T_Mecs_Ctx *ctx_E = NULL;
     BPU_T_UN_Mecs_Params params;
+    BPU_T_GF2_Vector *r1,*pub_vec, *m1, *ct_kem, *m1_rec;
+    char *buffer = NULL;
+    int size;
+
+    BPU_gf2VecMalloc(&r1,128);
+    BPU_gf2VecRand(r1,20);
+
 
     /***************************************/
     // mce initialisation t = 50, m = 11
@@ -141,39 +149,78 @@ int testKeyExchange(){
         return 1;
     }
 
-    if (BPU_mecsInitCtx(&ctx, &params, BPU_EN_MECS_BASIC_GOPPA)) {
+    if (BPU_mecsInitCtx(&ctx_A, &params, BPU_EN_MECS_BASIC_GOPPA)) {
         return 1;
     }
     /***************************************/
     fprintf(stderr, "Key generation...\n");
     // key pair generation
-    if (BPU_mecsGenKeyPair(ctx)) {
+    if (BPU_mecsGenKeyPair(ctx_A)) {
         BPU_printError("Key generation error");
         return 1;
     }
 
-    if (BPU_mecsInitCtx(&ctx_2, &params, BPU_EN_MECS_BASIC_GOPPA)) {
+    if (BPU_mecsInitCtx(&ctx_B, &params, BPU_EN_MECS_BASIC_GOPPA)) {
         return 1;
     }
     /***************************************/
     fprintf(stderr, "Key generation...\n");
     // key pair generation
-    if (BPU_mecsGenKeyPair(ctx_2)) {
+    if (BPU_mecsGenKeyPair(ctx_B)) {
         BPU_printError("Key generation error");
-
         return 1;
     }
 
-    if(BPU_KeyExchangeMecs(ctx,ctx_2)){
-        BPU_printError("Exchange scheme error");
-        BPU_mecsFreeCtx(&ctx);
-        BPU_mecsFreeCtx(&ctx_2);
+    if (BPU_mecsInitCtx(&ctx_E, &params, BPU_EN_MECS_BASIC_GOPPA)) {
+        return 1;
+    }
+    /***************************************/
+    fprintf(stderr, "Key generation...\n");
+    // key pair generation
+    if (BPU_mecsGenKeyPair(ctx_E)) {
+        BPU_printError("Key generation error");
+        return 1;
+    }
+
+    BPU_gf2VecMalloc(&ct_kem,ctx_A->ct_len);
+
+    //Encode ephemeral pk into buffer
+    if (BPU_asn1EncodePubKey(&buffer, &size, ctx_E)) {
+            return -1;
+    }
+    BPU_printError("Encoding pub key to buffer");
+    BPU_gf2VecMalloc(&pub_vec,size);
+    BPU_gf2ArraytoVector(pub_vec,buffer);
+
+    //Allocate memory for m1
+    BPU_gf2VecMalloc(&m1,pub_vec->len + r1->len);
+
+    BPU_gf2VecConcat(m1,r1, pub_vec);
+
+    //A sends m1 to B
+    if(BPU_cryptobox_send(ct_kem,m1, ctx_B)){
+        BPU_printError("Hybrid scheme error");
+        BPU_mecsFreeCtx(&ctx_B);
         BPU_mecsFreeParamsGoppa(&params);
     return 1;
     }
+    BPU_printError("M1 has been sent\n");
 
-    BPU_mecsFreeCtx(&ctx);
-    BPU_mecsFreeCtx(&ctx_2);
+    BPU_gf2VecMalloc(&m1_rec,m1->len);
+    //B recieves m1
+    if(BPU_cryptobox_recieve(m1_rec,ct_kem, ctx_B)){
+         BPU_printError("Hybrid scheme error");
+         BPU_mecsFreeCtx(&ctx_B);
+         BPU_mecsFreeParamsGoppa(&params);
+     return 1;
+     }
+    BPU_printError("M1 has been recieved\n");
+    BPU_printError("m1_rec:");
+    BPU_printGf2Vec(m1_rec);
+
+
+    BPU_mecsFreeCtx(&ctx_A);
+    BPU_mecsFreeCtx(&ctx_B);
     BPU_mecsFreeParamsGoppa(&params);
 
     return rc;
@@ -479,7 +526,7 @@ int main(int argc, char **argv) {
  #endif
 
 //#ifdef BPU_CONF_MECS_EXCHANGE
-//    rc += testKeyExchange();
+//   rc += testKeyExchange();
 //#endif
 
 	return rc;
