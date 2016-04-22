@@ -104,11 +104,12 @@ int BPU_gf2ArraytoVector(BPU_T_GF2_Vector *v, char *s){
 }
 
 int BPU_gf2VectortoArray(BPU_T_GF2_Vector *v, char *s){
+    BPU_printError("s len %d\n",strlen(s));
     if(v->len > strlen(s) + 1) {
         BPU_printError("allocation error");
         return -1;
     }
-    memcpy(s,v->elements,strlen(s)+1);
+    memcpy(s,v->elements,v->len);
     return 0;
 }
 

@@ -189,8 +189,8 @@ int BPU_cryptobox_recieve(BPU_T_GF2_Vector *out, BPU_T_GF2_Vector *in, const BPU
 
         BPU_padDel(out,pt_dem);
 
-        BPU_printError("OUT:");
-        BPU_printGf2Vec(out);
+        //BPU_printError("OUT:");
+       // BPU_printGf2Vec(out);
 
 
         return 0;
