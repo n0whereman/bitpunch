@@ -80,7 +80,7 @@ int testCryptoBox(){
     BPU_T_UN_Mecs_Params params;
     BPU_T_GF2_Vector *pt_dem_a,*pt_dem_b, *ct_kem;
        BPU_gf2VecMalloc(&ct_kem,3072);
-       BPU_gf2VecMalloc(&pt_dem_a,333);
+       BPU_gf2VecMalloc(&pt_dem_a,1920);
        BPU_gf2VecRand(pt_dem_a,20);
 
     /***************************************/
