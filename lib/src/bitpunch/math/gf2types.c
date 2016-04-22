@@ -94,6 +94,17 @@ int BPU_gf2MatMalloc(BPU_T_GF2_Matrix **m, int rows, int cols) {
 	return 0;
 }
 
+int BPU_allocateBuffer(char **buffer, int size){
+    *buffer = (char*)calloc(size + 1,1);
+    for (int i = 0; i < size +1 ; i++)
+        {
+        (*buffer)[i] = '0';
+        }
+    *((*buffer) + size + 1) = '\0';
+    BPU_printError("buff len %d\n",strlen(*buffer));
+    return 0;
+}
+
 int BPU_gf2ArraytoVector(BPU_T_GF2_Vector *v, char *s){
     if(v->len < strlen(s) + 1) {
         BPU_printError("allocation error");

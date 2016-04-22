@@ -237,7 +237,6 @@ int testKeyExchange(){
      return 1;
      }
     BPU_gf2VecMalloc(&pke_rec,m1_rec->len - r1->len);
-    BPU_printError("PKE_rec len %d\n",pke_rec->len);
     //B crops PKE
     BPU_gf2VecCrop(pke_rec,m1_rec,0, m1_rec->len - r1->len);
     //B generates r2 and r3
@@ -245,16 +244,17 @@ int testKeyExchange(){
     BPU_gf2VecRand(r3,20);
 
     //TODO: ALLOCUJ JAK CLOVEK A NIE TU
-    /*char *pke_buf = (char *) malloc(pke_rec->len);
+    /*char *pke_buf = NULL;
+    BPU_allocateBuffer(&pke_buf,pke_rec->len);
     BPU_printError("PKE_rec len %d\n",pke_rec->len);
     BPU_printError("pke_buf len %d\n",strlen(pke_buf));
-    BPU_gf2VectortoArray(pke_rec,pke_buf);*/
+    BPU_gf2VectortoArray(pke_rec,&pke_buf);*/
 
     //B decodes pub_key, ToDo: nema tu byt nieco ine?
     BPU_printError("PKE has been set\n");
     //B encrypts s2
     BPU_gf2VecMalloc(&s2_kem, 4000);
-    if(BPU_cryptobox_send(s2_kem,r2, pke,size2)){
+    if(BPU_cryptobox_send(s2_kem,r2, pke,size)){
         BPU_printError("Hybrid scheme error");
         BPU_mecsFreeParamsGoppa(&params);
     return 1;
