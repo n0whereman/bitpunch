@@ -35,35 +35,6 @@ int testKDF(){
 }
 
 
-/*int testAesEncDec(){
-    int rc = 0;
-    fprintf(stderr, "Aes - ENC/DEC testing...\n");
-    BPU_T_GF2_Vector *pt, *ct,*key,*iv,*tmp, *ivOrig;
-    //Testing plaintext vector - lenght 384 bit ()
-    BPU_gf2VecMalloc(&pt,256);
-    BPU_gf2VecRand(pt,3);
-    //pomocny
-    BPU_gf2VecMalloc(&tmp,256);
-    BPU_gf2VecCopy(tmp,pt);
-    BPU_gf2VecMalloc(&ct,256);
-    //Testing iv vector, must be 16 bytes
-    BPU_gf2VecMalloc(&iv,16*8);
-    BPU_gf2VecRand(iv,3);
-    BPU_gf2VecMalloc(&ivOrig,16*8);
-    BPU_gf2VecCopy(ivOrig,iv);
-    //Testing key vector, must be 32 bytes
-    BPU_gf2VecMalloc(&key,32*8);
-    BPU_gf2VecRand(key,3);
-    
-    rc += BPU_gf2VecAesEnc(ct,pt,key,iv);
-    BPU_gf2VecCopy(iv,ivOrig);
-    rc += BPU_gf2VecAesDec(pt,ct,key,iv);
-
-    if (BPU_gf2VecCmp(pt,tmp) == 0)
-        fprintf(stderr, "CT is equal to PT.\n");
-    return rc;
-}*/
-
 int testCryptoBox(){
     int rc = 0;
     char *pk = NULL;
@@ -78,44 +49,63 @@ int testCryptoBox(){
     // mce initialisation t = 50, m = 11
     fprintf(stderr, "Basic GOPPA Initialisation...\n");
     if (BPU_mecsInitParamsGoppa(&params, 11, 50, 0)) {
+        BPU_gf2VecFree(&ct_kem);
+        BPU_gf2VecFree(&pt_dem_a);
         return 1;
     }
     BPU_T_Mecs_Ctx *ctx = NULL;
     if (BPU_mecsInitCtx(&ctx, &params, BPU_EN_MECS_BASIC_GOPPA)) {
+        BPU_gf2VecFree(&ct_kem);
+        BPU_gf2VecFree(&pt_dem_a);
+        BPU_mecsFreeParamsGoppa(&params);
+        BPU_mecsFreeCtx(&ctx);
         return 1;
     }
     /***************************************/
     fprintf(stderr, "Key generation...\n");
     // key pair generation
     if (BPU_mecsGenKeyPair(ctx)) {
+        BPU_gf2VecFree(&ct_kem);
+        BPU_gf2VecFree(&pt_dem_a);
+        BPU_mecsFreeParamsGoppa(&params);
+        BPU_mecsFreeCtx(&ctx);
         BPU_printError("Key generation error");
         return 1;
     }
 
     //Encoding pub key
     if (BPU_asn1EncodePubKey(&pk, &size, ctx)) {
-            return -1;
+        free(pk);
+        BPU_mecsFreeParamsGoppa(&params);
+        BPU_mecsFreeCtx(&ctx);
+
+        return 1;
     }
 
     BPU_printError("Calling cryptobox...\n");
     if(BPU_cryptobox_send(ct_kem,pt_dem_a, pk,size)){
         BPU_printError("Hybrid scheme error");
+        free(pk);
         BPU_mecsFreeCtx(&ctx);
         BPU_mecsFreeParamsGoppa(&params);
+        BPU_gf2VecFree(&ct_kem);
+        BPU_gf2VecFree(&pt_dem_a);
     return 1;
     }
 
    if(BPU_cryptobox_recieve(pt_dem_a,ct_kem, ctx)){
         BPU_printError("Hybrid scheme error");
+        free(pk);
         BPU_mecsFreeCtx(&ctx);
         BPU_mecsFreeParamsGoppa(&params);
+        BPU_gf2VecFree(&ct_kem);
+        BPU_gf2VecFree(&pt_dem_a);
     return 1;
     }
 
     //Releasing used memory
     BPU_gf2VecFree(&ct_kem);
     BPU_gf2VecFree(&pt_dem_a);
-
     BPU_mecsFreeCtx(&ctx);
     BPU_mecsFreeParamsGoppa(&params);
 
@@ -151,10 +141,18 @@ int testKeyExchange(){
     // mce initialisation t = 50, m = 11
     fprintf(stderr, "Basic GOPPA Initialisation...\n");
     if (BPU_mecsInitParamsGoppa(&params, 11, 50, 0)) {
+        BPU_gf2VecFree(&r1);
+        BPU_gf2VecFree(&r2);
+        BPU_gf2VecFree(&r3);
+        BPU_mecsFreeParamsGoppa(&params);
         return 1;
     }
 
     if (BPU_mecsInitCtx(&ctx_A, &params, BPU_EN_MECS_BASIC_GOPPA)) {
+        BPU_gf2VecFree(&r1);
+        BPU_gf2VecFree(&r2);
+        BPU_gf2VecFree(&r3);
+        BPU_mecsFreeParamsGoppa(&params);
         return 1;
     }
     /***************************************/
@@ -162,10 +160,22 @@ int testKeyExchange(){
     // key pair generation
     if (BPU_mecsGenKeyPair(ctx_A)) {
         BPU_printError("Key generation error");
+        BPU_gf2VecFree(&r1);
+        BPU_gf2VecFree(&r2);
+        BPU_gf2VecFree(&r3);
+        BPU_mecsFreeCtx(&ctx_A);
+        BPU_mecsFreeParamsGoppa(&params);
         return 1;
     }
 
     if (BPU_mecsInitCtx(&ctx_B, &params, BPU_EN_MECS_BASIC_GOPPA)) {
+        BPU_printError("Key generation error");
+        BPU_gf2VecFree(&r1);
+        BPU_gf2VecFree(&r2);
+        BPU_gf2VecFree(&r3);
+        BPU_mecsFreeCtx(&ctx_A);
+        BPU_mecsFreeCtx(&ctx_B);
+        BPU_mecsFreeParamsGoppa(&params);
         return 1;
     }
     /***************************************/
@@ -173,10 +183,24 @@ int testKeyExchange(){
     // key pair generation
     if (BPU_mecsGenKeyPair(ctx_B)) {
         BPU_printError("Key generation error");
+        BPU_gf2VecFree(&r1);
+        BPU_gf2VecFree(&r2);
+        BPU_gf2VecFree(&r3);
+        BPU_mecsFreeCtx(&ctx_A);
+        BPU_mecsFreeCtx(&ctx_B);
+        BPU_mecsFreeParamsGoppa(&params);
+        BPU_printError("Key generation error");
         return 1;
     }
 
     if (BPU_mecsInitCtx(&ctx_E, &params, BPU_EN_MECS_BASIC_GOPPA)) {
+        BPU_printError("Key generation error");
+        BPU_gf2VecFree(&r1);
+        BPU_gf2VecFree(&r2);
+        BPU_gf2VecFree(&r3);
+        BPU_mecsFreeCtx(&ctx_A);
+        BPU_mecsFreeCtx(&ctx_B);
+        BPU_mecsFreeParamsGoppa(&params);
         return 1;
     }
     /***************************************/
@@ -184,6 +208,13 @@ int testKeyExchange(){
     // key pair generation
     if (BPU_mecsGenKeyPair(ctx_E)) {
         BPU_printError("Key generation error");
+        BPU_gf2VecFree(&r1);
+        BPU_gf2VecFree(&r2);
+        BPU_gf2VecFree(&r3);
+        BPU_mecsFreeCtx(&ctx_A);
+        BPU_mecsFreeCtx(&ctx_B);
+        BPU_mecsFreeCtx(&ctx_E);
+        BPU_mecsFreeParamsGoppa(&params);
         return 1;
     }
 
@@ -191,17 +222,41 @@ int testKeyExchange(){
 
     //gain pre-shared PKE_A
     if (BPU_asn1EncodePubKey(&pka, &size, ctx_A)) {
-            return -1;
+        BPU_gf2VecFree(&r1);
+        BPU_gf2VecFree(&r2);
+        BPU_gf2VecFree(&r3);
+        free(pka);
+        BPU_mecsFreeCtx(&ctx_A);
+        BPU_mecsFreeCtx(&ctx_B);
+        BPU_mecsFreeCtx(&ctx_E);
+        BPU_mecsFreeParamsGoppa(&params);
+            return 1;
     }
 
     //gain pre-shared PKE_B
     if (BPU_asn1EncodePubKey(&pkb, &size, ctx_B)) {
-            return -1;
+        BPU_gf2VecFree(&r1);
+        BPU_gf2VecFree(&r2);
+        BPU_gf2VecFree(&r3);
+        free(pkb);
+        BPU_mecsFreeCtx(&ctx_A);
+        BPU_mecsFreeCtx(&ctx_B);
+        BPU_mecsFreeCtx(&ctx_E);
+        BPU_mecsFreeParamsGoppa(&params);
+            return 1;
     }
 
     //Encode ephemeral pk into buffer
     if (BPU_asn1EncodePubKey(&pke, &size2, ctx_E)) {
-            return -1;
+        BPU_gf2VecFree(&r1);
+        BPU_gf2VecFree(&r2);
+        BPU_gf2VecFree(&r3);
+        free(pke);
+        BPU_mecsFreeCtx(&ctx_A);
+        BPU_mecsFreeCtx(&ctx_B);
+        BPU_mecsFreeCtx(&ctx_E);
+        BPU_mecsFreeParamsGoppa(&params);
+            return 1;
     }
     BPU_printError("Encoding pub key to buffer");
     BPU_gf2VecMalloc(&pub_vec,size2);
@@ -214,6 +269,17 @@ int testKeyExchange(){
     //A sends m1 to B
     if(BPU_cryptobox_send(ct_kem,s1, pkb,size)){
         BPU_printError("Hybrid scheme error");
+        BPU_gf2VecFree(&r1);
+        BPU_gf2VecFree(&r2);
+        BPU_gf2VecFree(&r3);
+        BPU_gf2VecFree(&s1);
+        BPU_gf2VecFree(&ct_kem);
+        free(pkb);
+        free(pke);
+        free(pka);
+        BPU_mecsFreeCtx(&ctx_A);
+        BPU_mecsFreeCtx(&ctx_B);
+        BPU_mecsFreeCtx(&ctx_E);
         BPU_mecsFreeParamsGoppa(&params);
     return 1;
     }
@@ -222,7 +288,18 @@ int testKeyExchange(){
     //B recieves s1
     if(BPU_cryptobox_recieve(m1_rec,ct_kem, ctx_B)){
          BPU_printError("Hybrid scheme error");
+         BPU_gf2VecFree(&r1);
+         BPU_gf2VecFree(&r2);
+         BPU_gf2VecFree(&r3);
+         BPU_gf2VecFree(&s1);
+         BPU_gf2VecFree(&m1_rec);
+         BPU_gf2VecFree(&ct_kem);
+         free(pkb);
+         free(pke);
+         free(pka);
+         BPU_mecsFreeCtx(&ctx_A);
          BPU_mecsFreeCtx(&ctx_B);
+         BPU_mecsFreeCtx(&ctx_E);
          BPU_mecsFreeParamsGoppa(&params);
      return 1;
      }
@@ -240,6 +317,19 @@ int testKeyExchange(){
      BPU_gf2VecMalloc(&s2_kem, 4000);
     if(BPU_cryptobox_send(s2_kem,r2, pke,buf_size)){
         BPU_printError("Hybrid scheme error");
+        BPU_gf2VecFree(&r1);
+        BPU_gf2VecFree(&r2);
+        BPU_gf2VecFree(&r3);
+        BPU_gf2VecFree(&s1);
+        BPU_gf2VecFree(&s2_kem);
+        BPU_gf2VecFree(&m1_rec);
+        BPU_gf2VecFree(&ct_kem);
+        free(pkb);
+        free(pke);
+        free(pka);
+        BPU_mecsFreeCtx(&ctx_A);
+        BPU_mecsFreeCtx(&ctx_B);
+        BPU_mecsFreeCtx(&ctx_E);
         BPU_mecsFreeParamsGoppa(&params);
     return 1;
     }
@@ -254,6 +344,21 @@ int testKeyExchange(){
     BPU_gf2VecMalloc(&s3_kem, s3->len);
     if(BPU_cryptobox_send(s3_kem,s3, pka,size)){
         BPU_printError("Hybrid scheme error");
+        BPU_gf2VecFree(&r1);
+        BPU_gf2VecFree(&r2);
+        BPU_gf2VecFree(&r3);
+        BPU_gf2VecFree(&s1);
+        BPU_gf2VecFree(&s3);
+        BPU_gf2VecFree(&r3r1);
+        BPU_gf2VecFree(&s2_kem);
+        BPU_gf2VecFree(&m1_rec);
+        BPU_gf2VecFree(&ct_kem);
+        free(pkb);
+        free(pke);
+        free(pka);
+        BPU_mecsFreeCtx(&ctx_A);
+        BPU_mecsFreeCtx(&ctx_B);
+        BPU_mecsFreeCtx(&ctx_E);
         BPU_mecsFreeParamsGoppa(&params);
     return 1;
     }
@@ -262,7 +367,23 @@ int testKeyExchange(){
     BPU_gf2VecMalloc(&s3_rec, s3_kem->len);
     if(BPU_cryptobox_recieve(s3_rec,s3_kem,ctx_A)){
          BPU_printError("Hybrid scheme error");
+         BPU_gf2VecFree(&r1);
+         BPU_gf2VecFree(&r2);
+         BPU_gf2VecFree(&r3);
+         BPU_gf2VecFree(&s1);
+         BPU_gf2VecFree(&s3);
+          BPU_gf2VecFree(&s3_rec);
+           BPU_gf2VecFree(&s3_kem);
+         BPU_gf2VecFree(&r3r1);
+         BPU_gf2VecFree(&s2_kem);
+         BPU_gf2VecFree(&m1_rec);
+         BPU_gf2VecFree(&ct_kem);
+         free(pkb);
+         free(pke);
+         free(pka);
+         BPU_mecsFreeCtx(&ctx_A);
          BPU_mecsFreeCtx(&ctx_B);
+         BPU_mecsFreeCtx(&ctx_E);
          BPU_mecsFreeParamsGoppa(&params);
      return 1;
      }
@@ -271,17 +392,53 @@ int testKeyExchange(){
     BPU_gf2VecMalloc(&s2_rec, s3_rec->len - r3r1->len);
     BPU_gf2VecCrop(s2_rec,s3_rec,0, s3_rec->len - r3r1->len);
 
-    BPU_gf2VecMalloc(&r2_rec, r2->len);
+   BPU_gf2VecMalloc(&r2_rec, r2->len);
     if(BPU_cryptobox_recieve(r2_rec,s2_rec,ctx_E)){
          BPU_printError("Hybrid scheme error");
+         BPU_gf2VecFree(&r1);
+         BPU_gf2VecFree(&r2);
+         BPU_gf2VecFree(&r3);
+         BPU_gf2VecFree(&s1);
+         BPU_gf2VecFree(&s3);
+          BPU_gf2VecFree(&s3_rec);
+           BPU_gf2VecFree(&s3_kem);
+           BPU_gf2VecFree(&r2_rec);
+           BPU_gf2VecFree(&s2_rec);
+         BPU_gf2VecFree(&r3r1);
+         BPU_gf2VecFree(&s2_kem);
+         BPU_gf2VecFree(&m1_rec);
+         BPU_gf2VecFree(&ct_kem);
+         free(pkb);
+         free(pke);
+         free(pka);
+         BPU_mecsFreeCtx(&ctx_A);
+         BPU_mecsFreeCtx(&ctx_B);
          BPU_mecsFreeCtx(&ctx_E);
          BPU_mecsFreeParamsGoppa(&params);
      return 1;
      }
 
     //ToDo: uvolni pamat
+    BPU_gf2VecFree(&r1);
+    BPU_gf2VecFree(&r2);
+    BPU_gf2VecFree(&r3);
+    BPU_gf2VecFree(&s1);
+    BPU_gf2VecFree(&s3);
+    BPU_gf2VecFree(&s3_rec);
+    BPU_gf2VecFree(&s3_kem);
+    BPU_gf2VecFree(&r2_rec);
+    BPU_gf2VecFree(&s2_rec);
+    BPU_gf2VecFree(&r3r1);
+    BPU_gf2VecFree(&s2_kem);
+    BPU_gf2VecFree(&m1_rec);
+    BPU_gf2VecFree(&ct_kem);
+    free(pkb);
+    free(pke);
+    free(pka);
     BPU_mecsFreeCtx(&ctx_A);
     BPU_mecsFreeCtx(&ctx_B);
+    BPU_mecsFreeCtx(&ctx_E);
+    BPU_mecsFreeParamsGoppa(&params);
 
     return rc;
 }
@@ -541,16 +698,6 @@ int main(int argc, char **argv) {
     BPU_mecsFreeCtx(&ctx);
     BPU_mecsFreeParamsGoppa(&params);
 #endif
-
-/*#ifdef BPU_CONF_MECS_CCA2_KOBARA_IMAI_GOPPA
-    fprintf(stderr, "\nCCA2 Kobara-IMAI GOPPA Initialisation...\n");
-    if (BPU_mecsInitCtx(&ctx, &params, BPU_EN_MECS_CCA2_KOBARA_IMAI_GOPPA)) {
-        return 1;
-    }
-    rc += testKeyGenEncDec(ctx);
-    BPU_mecsFreeCtx(&ctx);
-    BPU_mecsFreeParamsGoppa(&params);
-#endif*/
 
 // 	/***************************************/
 //     mce initialisation of 80-bit security

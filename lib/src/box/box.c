@@ -11,7 +11,7 @@
 #include <bitpunch/crypto/padding/padding.h>
 
 int BPU_cryptobox_send(BPU_T_GF2_Vector *out, BPU_T_GF2_Vector *in, const char *pk, int size) {
-        BPU_T_GF2_Vector *key_enc,*mecs_out,*rest,*mecs_block,*tag, *enc_salt,*ct_dem, *iv_dem,*pt_kem,*pt_kem_pad,*iv_salt,*in_pad;
+        BPU_T_GF2_Vector *key_enc,*mecs_out,*rest,*mecs_block,*tag, *enc_salt,*ct_dem, *iv_dem,*pt_kem,*iv_salt,*in_pad;
         int err = 0;
         int pad_len = 0;
         int pt_kem_size = 0;
@@ -108,32 +108,46 @@ int BPU_cryptobox_send(BPU_T_GF2_Vector *out, BPU_T_GF2_Vector *in, const char *
         fprintf(stderr, "MECS encryption...\n");
         if (BPU_mecsBasicEncrypt(mecs_out, mecs_block, ctx,0)) {
             BPU_printError("Encryption error");
-            BPU_gf2VecFree(&ctx);
-            BPU_gf2VecFree(&pt_kem_pad);
+            BPU_mecsFreeCtx(&ctx);
+            BPU_gf2VecFree(&mecs_out);
+            BPU_gf2VecFree(&rest);
+            BPU_gf2VecFree(&mecs_block);
+            BPU_gf2VecFree(&iv_dem);
+            BPU_gf2VecFree(&iv_salt);
+            BPU_gf2VecFree(&in_pad);
             BPU_gf2VecFree(&pt_kem);
+            BPU_gf2VecFree(&ct_dem);
+            BPU_gf2VecFree(&key_enc);
+            BPU_gf2VecFree(&enc_salt);
+            BPU_gf2VecFree(&tag);
             return 1;
         }
 
         BPU_gf2VecConcat(out, mecs_out,rest);
 
+        BPU_gf2VecFree(&mecs_block);
+        BPU_gf2VecFree(&rest);
         BPU_gf2VecFree(&mecs_out);
         BPU_gf2VecFree(&iv_dem);
+        BPU_gf2VecFree(&iv_salt);
+        BPU_gf2VecFree(&in_pad);
+        BPU_gf2VecFree(&pt_kem);
         BPU_gf2VecFree(&ct_dem);
         BPU_gf2VecFree(&key_enc);
         BPU_gf2VecFree(&enc_salt);
+        BPU_gf2VecFree(&tag);
+        BPU_mecsFreeCtx(&ctx);
 
 	return 0;
 }
 
 
 int BPU_cryptobox_recieve(BPU_T_GF2_Vector *out, BPU_T_GF2_Vector *in, const BPU_T_Mecs_Ctx *ctx) {
-       int err = 0;
         BPU_T_GF2_Vector *tag,*pt_dem,*ct_dem_tag,*mecs_dec,*enc_salt,*key_enc,*ct_dem, *iv_dem, *iv_salt,*rest,*mecs_block;
 
         BPU_gf2VecMalloc(&mecs_block, ctx->ct_len);
         BPU_gf2VecMalloc(&rest, in->len - ctx->ct_len);
         BPU_gf2VecMalloc(&mecs_dec, ctx->pt_len);
-
 
         if(in->len > ctx->ct_len){
             BPU_gf2VecCrop(mecs_block, in, 0,ctx->ct_len);
@@ -149,8 +163,11 @@ int BPU_cryptobox_recieve(BPU_T_GF2_Vector *out, BPU_T_GF2_Vector *in, const BPU
         fprintf(stderr, "MECS decryption...\n");
          if (BPU_mecsBasicDecrypt(mecs_dec, mecs_block, ctx)) {
              BPU_printError("Decryption error");
-             BPU_gf2VecFree(&ctx);
              BPU_gf2VecFree(&mecs_dec);
+             BPU_gf2VecFree(&mecs_block);
+             BPU_gf2VecFree(&rest);
+             BPU_gf2VecFree(&tag);
+             BPU_gf2VecFree(&iv_dem);
              return 1;
          }
 
@@ -178,13 +195,40 @@ int BPU_cryptobox_recieve(BPU_T_GF2_Vector *out, BPU_T_GF2_Vector *in, const BPU
          BPU_gf2VecCrop(tag,ct_dem_tag,ct_dem_tag->len - tag->len,tag->len);
 
         //DEM decryption
-        err += BPU_gf2VecAesDecandTag(pt_dem,ct_dem,tag,key_enc,iv_dem);
+
+        if(BPU_gf2VecAesDecandTag(pt_dem,ct_dem,tag,key_enc,iv_dem)){
+            BPU_printError("Could not be decrypted\n");
+            BPU_gf2VecFree(&tag);
+            BPU_gf2VecFree(&pt_dem);
+            BPU_gf2VecFree(&ct_dem_tag);
+            BPU_gf2VecFree(&mecs_dec);
+            BPU_gf2VecFree(&enc_salt);
+            BPU_gf2VecFree(&key_enc);
+            BPU_gf2VecFree(&ct_dem);
+            BPU_gf2VecFree(&iv_dem);
+            BPU_gf2VecFree(&iv_salt);
+            BPU_gf2VecFree(&mecs_block);
+            BPU_gf2VecFree(&rest);
+            return 1;
+        }
 
         BPU_padDel(out,pt_dem);
 
         //BPU_printError("OUT:");
        // BPU_printGf2Vec(out);
 
+        //Release memory
+        BPU_gf2VecFree(&tag);
+        BPU_gf2VecFree(&pt_dem);
+        BPU_gf2VecFree(&ct_dem_tag);
+        BPU_gf2VecFree(&mecs_dec);
+        BPU_gf2VecFree(&enc_salt);
+        BPU_gf2VecFree(&key_enc);
+        BPU_gf2VecFree(&ct_dem);
+        BPU_gf2VecFree(&iv_dem);
+        BPU_gf2VecFree(&iv_salt);
+       // ToDo: preco nebyva initialized? BPU_gf2VecFree(&mecs_block);
+        BPU_gf2VecFree(&rest);
 
         return 0;
 }

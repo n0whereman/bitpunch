@@ -47,9 +47,14 @@ int BPU_gf2VecAesEncandTag(BPU_T_GF2_Vector *out, const BPU_T_GF2_Vector *in,BPU
     //mbedtls_aes_crypt_cbc(&enc_ctx, MBEDTLS_AES_ENCRYPT, in->len / (BITS_PER_BYTE), (uint8_t *) iv->elements,(uint8_t *) in->elements, output);
     if(mbedtls_gcm_crypt_and_tag(&gcm_ctx, MBEDTLS_GCM_ENCRYPT, in->len / (BITS_PER_BYTE), (uint8_t *) iv->elements, iv->len / (BITS_PER_BYTE), (uint8_t *) add->elements, 1, (uint8_t *) in->elements, output, tag->len / (BITS_PER_BYTE), tagg)){
         BPU_printError("Encrypted\n");
+    } else {
+        BPU_gf2VecFree(&add);
+        mbedtls_gcm_free(&gcm_ctx);
+        return 1;
     }
     memcpy(out->elements, output, out->len / 8);
     memcpy(tag->elements, tagg, tag->len / 8);
+    BPU_gf2VecFree(&add);
     mbedtls_gcm_free(&gcm_ctx);
 
     return 0;
@@ -76,10 +81,14 @@ int BPU_gf2VecAesDecandTag(BPU_T_GF2_Vector *out,  const BPU_T_GF2_Vector *in,BP
     }
     else{
         BPU_printError("Error je %d\n", err);
+        mbedtls_gcm_free(&dec_ctx);
+        BPU_gf2VecFree(&add);
+        return 1;
     }
 
     memcpy(out->elements, output, out->len / 8);
     mbedtls_gcm_free(&dec_ctx);
+    BPU_gf2VecFree(&add);
     return 0;
 }
 
