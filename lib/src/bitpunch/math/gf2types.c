@@ -113,7 +113,7 @@ int BPU_allocateBuffer(char **buffer, int *size ,int len){
     return 0;
 }
 
-int BPU_gf2ArraytoVector(BPU_T_GF2_Vector *v, char *s){
+int BPU_gf2ArraytoVector(BPU_T_GF2_Vector *v, const char *s){
     if(v->len < strlen(s) + 1) {
         BPU_printError("allocation error");
         return -1;
@@ -157,9 +157,6 @@ int BPU_gf2VecMallocElements(BPU_T_GF2_Vector *v, int len) {
 
     // len
     v->len = len;
-
-    // calc how many elements of set size will be in one row
-    int modul = 0;
 
     v->elements_in_row = len / v->element_bit_size;
     if ( len % v->element_bit_size > 0)

@@ -18,6 +18,7 @@
 #include <bitpunch/bitpunch.h>
 #include <box/box.h>
 
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
@@ -28,25 +29,13 @@ int testKDF(){
     BPU_T_GF2_Vector *extended_pwd, *pwd, *salt;
     BPU_gf2VecMalloc(&pwd,64);
     BPU_gf2VecMalloc(&salt,64);
-    //pomocny
     BPU_gf2VecMalloc(&extended_pwd,512);
     BPU_gf2VecKDF(extended_pwd,pwd, salt, 512);
     return 0;
 }
 
-int testMAC(){
-    BPU_T_GF2_Vector *in, *key, *out;
-    BPU_gf2VecMalloc(&key,64);
-    BPU_gf2VecRand(key,3);
-    BPU_gf2VecMalloc(&in,64);
-    BPU_gf2VecRand(in,3);
-    BPU_gf2VecMalloc(&out,512);
-    //pomocny
-    BPU_gf2VecComputeHMAC(out,in, key);
-    return 0;
-}
 
-int testAesEncDec(){
+/*int testAesEncDec(){
     int rc = 0;
     fprintf(stderr, "Aes - ENC/DEC testing...\n");
     BPU_T_GF2_Vector *pt, *ct,*key,*iv,*tmp, *ivOrig;
@@ -73,14 +62,14 @@ int testAesEncDec(){
     if (BPU_gf2VecCmp(pt,tmp) == 0)
         fprintf(stderr, "CT is equal to PT.\n");
     return rc;
-}
+}*/
 
 int testCryptoBox(){
     int rc = 0;
     char *pk = NULL;
-    int *size = NULL;
+    int size;
     BPU_T_UN_Mecs_Params params;
-    BPU_T_GF2_Vector *pt_dem_a,*pt_dem_b, *ct_kem;
+    BPU_T_GF2_Vector *pt_dem_a, *ct_kem;
        BPU_gf2VecMalloc(&ct_kem,3072);
        BPU_gf2VecMalloc(&pt_dem_a,2086);
        BPU_gf2VecRand(pt_dem_a,20);
@@ -139,10 +128,9 @@ int testKeyExchange(){
     // MUST BE NULL
     BPU_T_Mecs_Ctx *ctx_A = NULL;
     BPU_T_Mecs_Ctx *ctx_B = NULL;
-    BPU_T_Mecs_Ctx *ctx_C = NULL;
     BPU_T_Mecs_Ctx *ctx_E = NULL;
     BPU_T_UN_Mecs_Params params;
-    BPU_T_GF2_Vector *r1,*r2_rec,*pub_vec, *s2_rec,*s3_rec,*s1, *s3,*s3_kem, *ct_kem,*s2_kem, *m1_rec,*r2,*r3,*pub_vec2,*pke_rec,*r3r1;
+    BPU_T_GF2_Vector *r1,*r2_rec,*pub_vec, *s2_rec,*s3_rec,*s1, *s3,*s3_kem, *ct_kem,*s2_kem, *m1_rec,*r2,*r3,*pke_rec,*r3r1;
     char *pke = NULL;
     char *pkb = NULL;
     char *pka = NULL;
@@ -591,9 +579,7 @@ int main(int argc, char **argv) {
  #endif
 
  #ifdef BPU_CONF_MECS_HYBRID
-     rc += testAesEncDec();
      rc += testKDF();
-     rc += testMAC();
      rc += testCryptoBox();
  #endif
 

@@ -8,20 +8,16 @@
 #include <bitpunch/crypto/hash/sha512.h>
 #include <bitpunch/asn1/asn1.h>
 //ToDO: prerobit zavislosti na utils
-#include <bitpunch/crypto/aes/aes.h>
-#include <bitpunch/crypto/kdf/pbkdf2.h>
-#include <bitpunch/crypto/mac/mac.h>
 #include <bitpunch/crypto/padding/padding.h>
 
 int BPU_cryptobox_send(BPU_T_GF2_Vector *out, BPU_T_GF2_Vector *in, const char *pk, int size) {
-        BPU_T_GF2_Vector *key_enc,*mecs_out,*rest,*mecs_block,*tag,*mac_salt, *enc_salt,*ct_dem, *iv_dem,*mac,*pt_kem,*pt_kem_pad,*iv_salt, *ct_dem_pad,*in_pad;
+        BPU_T_GF2_Vector *key_enc,*mecs_out,*rest,*mecs_block,*tag, *enc_salt,*ct_dem, *iv_dem,*pt_kem,*pt_kem_pad,*iv_salt,*in_pad;
         int err = 0;
         int pad_len = 0;
         int pt_kem_size = 0;
         int mecs_block_size = 0;
         int aes_blocks_num = 0;
         int aes_blocks_bit = 0;
-        int pt_kem_pad_size = 0;
 
         //Set PK to context
         BPU_T_Mecs_Ctx *ctx = NULL;
@@ -132,10 +128,7 @@ int BPU_cryptobox_send(BPU_T_GF2_Vector *out, BPU_T_GF2_Vector *in, const char *
 
 int BPU_cryptobox_recieve(BPU_T_GF2_Vector *out, BPU_T_GF2_Vector *in, const BPU_T_Mecs_Ctx *ctx) {
        int err = 0;
-       int aes_blocks_num = 0;
-       int aes_blocks = 0;
-       int mecs_block_size = 0;
-        BPU_T_GF2_Vector *tag,*pt_dem,*ct_dem_tag,*mecs_dec,*pt_kem_dec_pad,*pt_kem_dec,*enc_salt,*mac_a,*mac_b,*key_enc,*key_auth,*ct_dem, *iv_dem, *iv_salt,*rest,*mecs_block;
+        BPU_T_GF2_Vector *tag,*pt_dem,*ct_dem_tag,*mecs_dec,*enc_salt,*key_enc,*ct_dem, *iv_dem, *iv_salt,*rest,*mecs_block;
 
         BPU_gf2VecMalloc(&mecs_block, ctx->ct_len);
         BPU_gf2VecMalloc(&rest, in->len - ctx->ct_len);
