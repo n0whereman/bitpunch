@@ -146,6 +146,8 @@ int testKeyExchange(){
     char *pke = NULL;
     char *pkb = NULL;
     char *pka = NULL;
+    char *pke_buf = NULL;
+    int buf_size;
     //char *pke_buf = NULL;
     int size = 0;
     int size2 = 0;
@@ -217,7 +219,7 @@ int testKeyExchange(){
     BPU_gf2VecMalloc(&pub_vec,size2);
     BPU_gf2ArraytoVector(pub_vec,pke);
 
-    //Allocate memory for m1
+    //Allocate memory for m1 = PKE | r1
     BPU_gf2VecMalloc(&s1,pub_vec->len + r1->len);
     BPU_gf2VecConcat(s1, pub_vec, r1);
 
@@ -243,18 +245,12 @@ int testKeyExchange(){
     BPU_gf2VecRand(r2,20);
     BPU_gf2VecRand(r3,20);
 
-    //TODO: ALLOCUJ JAK CLOVEK A NIE TU
-    /*char *pke_buf = NULL;
-    BPU_allocateBuffer(&pke_buf,pke_rec->len);
-    BPU_printError("PKE_rec len %d\n",pke_rec->len);
-    BPU_printError("pke_buf len %d\n",strlen(pke_buf));
-    BPU_gf2VectortoArray(pke_rec,&pke_buf);*/
+    BPU_allocateBuffer(&pke_buf,&buf_size,pke_rec->len);
+    BPU_gf2VectortoArray(pke_rec,pke_buf, &buf_size);
 
-    //B decodes pub_key, ToDo: nema tu byt nieco ine?
-    BPU_printError("PKE has been set\n");
     //B encrypts s2
-    BPU_gf2VecMalloc(&s2_kem, 4000);
-    if(BPU_cryptobox_send(s2_kem,r2, pke,size)){
+     BPU_gf2VecMalloc(&s2_kem, 4000);
+    if(BPU_cryptobox_send(s2_kem,r2, pke,buf_size)){
         BPU_printError("Hybrid scheme error");
         BPU_mecsFreeParamsGoppa(&params);
     return 1;
@@ -286,6 +282,7 @@ int testKeyExchange(){
     //A decrypts r2
     BPU_gf2VecMalloc(&s2_rec, s3_rec->len - r3r1->len);
     BPU_gf2VecCrop(s2_rec,s3_rec,0, s3_rec->len - r3r1->len);
+
     BPU_gf2VecMalloc(&r2_rec, r2->len);
     if(BPU_cryptobox_recieve(r2_rec,s2_rec,ctx_E)){
          BPU_printError("Hybrid scheme error");
@@ -294,13 +291,9 @@ int testKeyExchange(){
      return 1;
      }
 
-    //BPU_printError("s2_rec:");
-    //BPU_printGf2Vec(s2_rec);
-
     //ToDo: uvolni pamat
-  /*  BPU_mecsFreeCtx(&ctx_A);
+    BPU_mecsFreeCtx(&ctx_A);
     BPU_mecsFreeCtx(&ctx_B);
-    BPU_mecsFreeParamsGoppa(&params);*/
 
     return rc;
 }

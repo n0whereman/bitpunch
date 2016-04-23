@@ -30,7 +30,7 @@ static const char *ivsalt = "AES-IV";
 #define BPU_MAC_LEN 256
 #define AES_SIZE 128
 
-BPU_cryptobox_send(BPU_T_GF2_Vector *out, BPU_T_GF2_Vector *in, const char *pk, int size);
+int BPU_cryptobox_send(BPU_T_GF2_Vector *out, BPU_T_GF2_Vector *in, const char *pk, int size);
 
 int BPU_cryptobox_recieve(BPU_T_GF2_Vector *out, BPU_T_GF2_Vector *in, const BPU_T_Mecs_Ctx *ctx2);
 

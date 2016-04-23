@@ -94,14 +94,22 @@ int BPU_gf2MatMalloc(BPU_T_GF2_Matrix **m, int rows, int cols) {
 	return 0;
 }
 
-int BPU_allocateBuffer(char **buffer, int size){
-    *buffer = (char*)calloc(size + 1,1);
-    for (int i = 0; i < size +1 ; i++)
-        {
+int BPU_allocateBuffer(char **buffer, int *size ,int len){
+    // element size in bits
+    int element_bit_size = sizeof(BPU_T_GF2) * 8;
+
+    int elements_in_row = len / element_bit_size;
+    if ( len % element_bit_size > 0)
+         elements_in_row++;
+
+    *buffer = (char*) calloc(1, sizeof(BPU_T_GF2) * elements_in_row);
+    *size = sizeof(BPU_T_GF2) * elements_in_row * 8;
+   /* for (int i = 0; i < sizeof(BPU_T_GF2) * elements_in_row + 1 ; i++)
+    {
         (*buffer)[i] = '0';
-        }
-    *((*buffer) + size + 1) = '\0';
-    BPU_printError("buff len %d\n",strlen(*buffer));
+    } */
+    //*((*buffer) + sizeof(BPU_T_GF2) * elements_in_row + 1) = '\0';
+    BPU_printError("buff len %d\n",*size);
     return 0;
 }
 
@@ -114,13 +122,15 @@ int BPU_gf2ArraytoVector(BPU_T_GF2_Vector *v, char *s){
     return 0;
 }
 
-int BPU_gf2VectortoArray(BPU_T_GF2_Vector *v, char *s){
-    BPU_printError("s len %d\n",strlen(s));
-    if(v->len > strlen(s) + 1) {
+int BPU_gf2VectortoArray(BPU_T_GF2_Vector *v, char *s, int *size){
+    BPU_printError("s len %d\n",*size);
+    if(v->len > *size) {
         BPU_printError("allocation error");
         return -1;
     }
-    memcpy(s,v->elements,v->len);
+    memcpy(s,v->elements,v->len / 8);
+    *size = v->len;
+    BPU_printError("v len %d\n",v->len);
     return 0;
 }
 

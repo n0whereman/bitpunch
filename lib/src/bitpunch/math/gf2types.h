@@ -243,7 +243,7 @@ void BPU_gf2SparseQcMatrixFree(BPU_T_GF2_Sparse_Qc_Matrix *v, int is_dyn);
 
 //TODO: Dokumentacia
 int BPU_gf2ArraytoVector(BPU_T_GF2_Vector *v, char *s);
-int BPU_gf2VectortoArray(BPU_T_GF2_Vector *v, char *s);
-int BPU_allocateBuffer(char **buffer, int size);
+int BPU_gf2VectortoArray(BPU_T_GF2_Vector *v, char *s, int *size);
+int BPU_allocateBuffer(char **buffer, int *size ,int len);
 
 #endif // BPUT_GF2TYPES_H

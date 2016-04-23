@@ -400,7 +400,7 @@ int BPU_asn1DecodePubKey(BPU_T_Mecs_Ctx **ctx, const char *buffer, const int siz
 
         return rc;
     }
-	BPU_mecsFreeParamsGoppa(&params);
+    BPU_mecsFreeParamsGoppa(&params);
 
 	if (BPU_asn1ReadValue(&tmp_buf, &tmp_len, (*ctx)->code_ctx->code_len * (*ctx)->code_ctx->msg_len, "g_mat", asn1_element)) {
         return -1;
