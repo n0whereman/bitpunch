@@ -162,13 +162,8 @@ int BPU_cryptobox_recieve(BPU_T_GF2_Vector *out, BPU_T_GF2_Vector *in, const BPU
 
         fprintf(stderr, "MECS decryption...\n");
          if (BPU_mecsBasicDecrypt(mecs_dec, mecs_block, ctx)) {
-             BPU_printError("Decryption error");
-             BPU_gf2VecFree(&mecs_dec);
-             BPU_gf2VecFree(&mecs_block);
-             BPU_gf2VecFree(&rest);
-             BPU_gf2VecFree(&tag);
-             BPU_gf2VecFree(&iv_dem);
-             return 1;
+             //BPU_printError("Decryption error");
+             BPU_gf2VecRand(ctx->code_ctx->e, 20);
          }
 
         BPU_gf2VecMalloc(&ct_dem_tag, mecs_dec->len + rest->len);
