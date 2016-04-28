@@ -41,9 +41,10 @@ int BPU_padAdd(BPU_T_GF2_Vector *padded_message, const BPU_T_GF2_Vector *message
 	return 0;
 }
 
-int BPU_padDel(BPU_T_GF2_Vector *message, const BPU_T_GF2_Vector *padded_message) {
+int BPU_padDel(BPU_T_GF2_Vector *message, const BPU_T_GF2_Vector *padded_message, int block_size) {
 	int i, message_size = 0;
-
+    float blocks = 0;
+    float blocks_num = 0;
 	// count the message size
 	for (i = padded_message->len-1; i >= 0; i--) {
 		// nula - padding
@@ -67,12 +68,15 @@ int BPU_padDel(BPU_T_GF2_Vector *message, const BPU_T_GF2_Vector *padded_message
 	}
 	message->len = message_size;
 
+    blocks = (float) message->len / (float) block_size;
+    blocks_num = (int) floor(blocks);
+
 	// copy n-1 elements of padded message into message
-	for (i = 0; i < padded_message->elements_in_row - 1; i++){
+    for (i = 0; i < blocks_num - 1; i++){
 		message->elements[i] = padded_message->elements[i];
 	}
 	// copy the rest of message
-	for (i = (padded_message->elements_in_row - 1) * padded_message->element_bit_size; i < message->len; i++){
+    for (i = (blocks_num) * padded_message->element_bit_size; i < message->len; i++){
 		BPU_gf2VecSetBit(message, i, BPU_gf2VecGetBit(padded_message, i));
 	}
     return 0;

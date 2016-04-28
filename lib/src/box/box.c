@@ -162,7 +162,7 @@ int BPU_cryptobox_recieve(BPU_T_GF2_Vector *out, BPU_T_GF2_Vector *in, const BPU
 
         fprintf(stderr, "MECS decryption...\n");
          if (BPU_mecsBasicDecrypt(mecs_dec, mecs_block, ctx)) {
-             //BPU_printError("Decryption error");
+             //BPU_printError("Decryption error"); || Generate a random error vector in order to prevent reaction attacks
              BPU_gf2VecRand(ctx->code_ctx->e, 20);
          }
 

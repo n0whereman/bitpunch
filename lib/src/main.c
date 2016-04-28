@@ -265,6 +265,8 @@ int testKeyExchange(){
     //Allocate memory for m1 = PKE | r1
     BPU_gf2VecMalloc(&s1,pub_vec->len + r1->len);
     BPU_gf2VecConcat(s1, pub_vec, r1);
+    BPU_printError("m1 len je %d", s1->len);
+
 
     //A sends m1 to B
     if(BPU_cryptobox_send(ct_kem,s1, pkb,size)){
@@ -283,6 +285,7 @@ int testKeyExchange(){
         BPU_mecsFreeParamsGoppa(&params);
     return 1;
     }
+    BPU_printError("S1 len je %d", ct_kem->len);
 
     BPU_gf2VecMalloc(&m1_rec,s1->len);
     //B recieves s1
@@ -430,7 +433,7 @@ int testKeyExchange(){
     BPU_gf2VecFree(&s2_rec);
     BPU_gf2VecFree(&r3r1);
     BPU_gf2VecFree(&s2_kem);
-    BPU_gf2VecFree(&m1_rec);
+    //BPU_gf2VecFree(&m1_rec);
     BPU_gf2VecFree(&ct_kem);
     free(pkb);
     free(pke);
