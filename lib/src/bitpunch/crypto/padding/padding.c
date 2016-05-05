@@ -44,7 +44,6 @@ int BPU_padAdd(BPU_T_GF2_Vector *padded_message, const BPU_T_GF2_Vector *message
 int BPU_padDel(BPU_T_GF2_Vector *message, const BPU_T_GF2_Vector *padded_message) {
 	int i, message_size = 0;
     float blocks = 0;
-    float blocks_num = 0;
 	// count the message size
 	for (i = padded_message->len-1; i >= 0; i--) {
 		// nula - padding
